@@ -36,7 +36,6 @@ Statement ->
 %sample %ws %file %ws %number
 {% d => [{"@sigOut": { "@spawn": semaIR.synth('loop',[semaIR.num(d[4].value),semaIR.str(d[2].value)]) }}] %}
 
-
 # Whitespace
 
 _  -> wschar:*                                                {% function(d) {return null;} %}
