@@ -1,7 +1,8 @@
 "use strict";
 importScripts("https://cdn.jsdelivr.net/npm/@tensorflow/tfjs");
 importScripts("http://mlweb.loria.fr/lalolib.js");
-// importScripts("https://cdn.jsdelivr.net/npm/@magenta/music@1.3.1");
+
+import "./magenta/magentamusic.js";
 
 // let a = tf.tensor([100]);
 var geval = eval; // puts eval into global scope https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval
@@ -44,7 +45,7 @@ onmessage = (m) => {
   }else if ('val' in m.data) {
 //    console.log("val");
     let val = m.data.val;
-//    console.log(val);
+   // console.log(val);
     val = JSON.parse(`[${val}]`)
 //    console.log(val);
     // console.log(loadResponders);
@@ -59,7 +60,8 @@ onmessage = (m) => {
       postMessage({
         func:"data",
         worker: 'testmodel',
-        val: output(m.data.val)
+        val: output(m.data.value),
+        tname: m.data.tname
       });
     }
   }
