@@ -44,11 +44,11 @@ SampleAndSpeed ->
   {% d =>
       semaIR.synth('loop',[semaIR.num(d[2].value),semaIR.str(d[0])])
   %}
-#   |
-#   SampleName %separator SampleAndSpeed ->
-#   {% d =>
-#       semaIR.synth('loop',[semaIR.synth('loop', d[2].value),semaIR.str(d[0])])
-#   %}
+  |
+  SampleName %separator SampleAndSpeed ->
+  {% d =>
+      semaIR.synth('loop',[semaIR.synth('loop', d[2].value),semaIR.str(d[0])])
+  %}
 
 SampleName -> (%click | %convol1 | %heart | %insec3 | %paper) {% d => d[0][0].value %}
 

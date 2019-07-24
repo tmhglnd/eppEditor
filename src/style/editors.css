@@ -16,6 +16,10 @@
   overflow: auto !important;
 }
 
+::-webkit-scrollbar {
+  display: none;
+}
+
 #editor1 {
   /* float:left; */
   justify-self: stretch;
@@ -37,7 +41,6 @@
   margin: 0px;
   /* margin: 5px 25px 0px 25px; */
   /* resize: both; */
-
 }
 
 

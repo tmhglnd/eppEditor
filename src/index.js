@@ -49,6 +49,9 @@ import 'codemirror/mode/javascript/javascript';
 import 'codemirror/theme/idea.css';
 import 'codemirror/theme/monokai.css';
 import 'codemirror/theme/oceanic-next.css';
+import 'codemirror/theme/lesser-dark.css';
+import 'codemirror/theme/base16-dark.css';
+import 'codemirror/theme/seti.css';
 // import 'codemirror/theme/abcdef.css';
 import 'codemirror/keymap/vim.js';
 import 'codemirror/lib/codemirror.css';
@@ -57,6 +60,7 @@ import langSketch from './language/langSketch';
 import { createSecretKey } from 'crypto';
 
 let audio;
+let mainTheme = "seti";
 
 let editor1, editor2;
 
@@ -150,7 +154,8 @@ function createEditor1() {
   editor1 = CodeMirror(document.getElementById('editor1'), {
     // theme: "abcdef",
     value: defaultEditorCode1,
-    theme: "monokai",
+    //theme: "monokai",
+    theme: mainTheme,
     lineNumbers: true,
     // mode:  "javascript",
     lineWrapping: true,
@@ -180,7 +185,8 @@ function createEditor2() {
     value: defaultEditorCode2,
     lineNumbers: true,
     mode: "javascript",
-    theme: "idea",
+    // theme: "idea",
+    theme: mainTheme,
     lineWrapping: true,
     extraKeys: {
       ["Cmd-Enter"]: () => evalModelEditorExpressionBlock(),
