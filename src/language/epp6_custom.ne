@@ -29,10 +29,10 @@ main -> _ Statement _
 {% d => ({ "@lang" : d[1] })  %}
 
 Statement ->
-  Expression _ %semicolon:? _ Statement 
+  Expression _ %semicolon _ Statement 
   {% d => [{ "@spawn": d[0] }].concat(d[4]) %}
   |
-  Expression _ %semicolon:? 
+  Expression _ %semicolon 
   {% d => [{"@sigOut": { "@spawn": d[0] }}] %}
   # | %hash . "\n"                                          
   # {% d => ({ "@comment": d[3] }) %}

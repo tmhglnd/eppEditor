@@ -154,13 +154,13 @@ function createEditor1() {
   editor1 = CodeMirror(document.getElementById('editor1'), {
     // theme: "abcdef",
     value: defaultEditorCode1,
+    showCursorWhenSelecting: true,
     //theme: "monokai",
     theme: mainTheme,
     lineNumbers: true,
-    // mode:  "javascript",
     lineWrapping: true,
     extraKeys: {
-      // [ "Cmd-Enter" ]: () => playAudio(),
+      // ["Cmd-Enter"]: () => playAudio(),
       ["Cmd-Enter"]: () => evalLiveCodeEditorExpression(),
       ["Ctrl-Enter"]: () => evalLiveCodeEditorExpression(),
       ["Shift-Enter"]: () => evalLiveCodeEditorExpression(),
@@ -183,6 +183,7 @@ function createEditor2() {
 
   editor2 = CodeMirror(document.getElementById('editor2'), {
     value: defaultEditorCode2,
+    showCursorWhenSelecting: true,
     lineNumbers: true,
     mode: "javascript",
     // theme: "idea",
@@ -437,6 +438,7 @@ function setupAudio(){
 }
 
 function playAudio() {
+  console.log("run code!");
   if (window.AudioEngine !== undefined) {
     window.AudioEngine.play();
   }
