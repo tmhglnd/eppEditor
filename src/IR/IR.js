@@ -12,6 +12,26 @@ const oscMap = {
 };
 
 const jsFuncMap = {
+  'amsynth': {
+    "setup":(o,p) => `${o} = new Module.maxiOsc();
+        ${o}mod = new Module.maxiOsc();
+        ${o}.phaseReset(${p.length>2 ? p[1].loop : 0.0});
+        ${o}mod.phaseReset(${p.length>2 ? p[1].loop : 0.0});`,
+    "loop":(o,p) => `${o}.sinewave(${p[0].loop})*${o}mod.sinewave(${p[1].loop})`},
+    'fmsynth': {
+      "setup":(o,p) => `${o} = new Module.maxiOsc();
+          ${o}mod = new Module.maxiOsc();
+          ${o}.phaseReset(${p.length>3 ? p[1].loop : 0.0});
+          ${o}mod.phaseReset(${p.length>3 ? p[1].loop : 0.0});`,
+      "loop":(o,p) => `${o}.sinewave(${p[0].loop} + ${o}mod.sinewave(${p[0].loop} * ${p[1].loop}) * (${p[2].loop} * ${p[0].loop} * ${p[1].loop}))`},
+    
+  /*'oscbank': {
+    "setup":(o,p) => 
+    `${o} = new Module.maxiOsc();
+    ${o}oscArr = [];
+    for (let i=0; i<${p.length}; i++){
+      ${o}oscArr[i] = new Module.maxiOsc(); }`,
+    "loop":(o,p) => ``},*/
   'saw': {"setup":(o,p)=>`${o} = new Module.maxiOsc(); ${o}.phaseReset(${p.length>1 ? p[1].loop : 0.0});`, "loop":(o,p)=>`${o}.saw(${p[0].loop})`},
   'sine': {"setup":(o,p)=>`${o} = new Module.maxiOsc(); ${o}.phaseReset(${p.length>1 ? p[1].loop : 0.0});`, "loop":(o,p)=>`${o}.sinewave(${p[0].loop})`},
   'triangle': {"setup":(o,p)=>`${o} = new Module.maxiOsc(); ${o}.phaseReset(${p.length>1 ? p[1].loop : 0.0});`, "loop":(o,p)=>`${o}.triangle(${p[0].loop})`},
@@ -22,6 +42,8 @@ const jsFuncMap = {
   'impulse': {"setup":(o,p)=>`${o} = new Module.maxiOsc(); ${o}.phaseReset(${p.length>1 ? p[1].loop : 0.0});`, "loop":(o,p)=>`${o}.impulse(${p[0].loop})`},
   'sawn': {"setup":(o,p)=>`${o} = new Module.maxiOsc(); ${o}.phaseReset(${p.length>1 ? p[1].loop : 0.0});`, "loop":(o,p)=>`${o}.sawn(${p[0].loop})`},
   'noise': {"setup":(o,p)=>`${o} = new Module.maxiOsc()`, "loop":(o,p)=>`${o}.noise()*${p[0].loop}`},
+  'toFreq' : {"setup":(o,p)=>"", "loop":(o,p)=>`Math.pow(2, Math.floor(${p[0].loop}-69)/12) * 440`}, 
+  'constant': {"setup":(o,p)=>"", "loop":(o,p)=>`${p[0].loop}`},
   'gt': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} > ${p[1].loop}) ? 1 : 0`},
   'lt': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} < ${p[1].loop}) ? 1 : 0`},
   'mod': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} % ${p[1].loop})`},
@@ -35,12 +57,12 @@ const jsFuncMap = {
   'sum': {"setup":(o,p)=>"", "loop":(o,p)=>{let s=`(${p[0].loop}`; for(let i=1; i < p.length; i++) s += `+${p[i].loop}`; return s+")";}},
   'mix': {"setup":(o,p)=>"", "loop":(o,p)=>{let s=`((${p[0].loop}`; for(let i=1; i < p.length; i++) s += `+${p[i].loop}`; return s+`)/${p.length})`;}},
   'prod': {"setup":(o,p)=>"", "loop":(o,p)=>{let s=`(${p[0].loop}`; for(let i=1; i < p.length; i++) s += `*${p[i].loop}`; return s+")";}},
-  'maplin': {"setup":(o,p)=>"", "loop":(o,p)=>`Module.maxiMap.linlin(${p[0].loop}, -1, 1, ${p[1].loop}, ${p[2].loop})`},
-  'ulin': {"setup":(o,p)=>"", "loop":(o,p)=>`Module.maxiMap.linlin(${p[0].loop}, 0, 1, ${p[1].loop}, ${p[2].loop})`},
-  'map': {"setup":(o,p)=>"", "loop":(o,p)=>`Module.maxiMap.linexp(${p[0].loop}, -1, 1, ${p[1].loop}, ${p[2].loop})`},
-  'uexp': {"setup":(o,p)=>"", "loop":(o,p)=>`Module.maxiMap.linexp(${p[0].loop}, 0.0000001, 1, ${p[1].loop}, ${p[2].loop})`},
-  'linlin': {"setup":(o,p)=>"", "loop":(o,p)=>`Module.maxiMap.linlin(${p[0].loop}, ${p[1].loop}, ${p[2].loop}),${p[3].loop}, ${p[4].loop})`},
-  'mapexp': {"setup":(o,p)=>"", "loop":(o,p)=>`Module.maxiMap.linexp(${p[0].loop}, ${p[1].loop}, ${p[2].loop}),${p[3].loop}, ${p[4].loop})`},
+  'maplinb': {"setup":(o,p)=>"", "loop":(o,p)=>`Module.maxiMap.linlin(${p[0].loop}, -1, 1, ${p[1].loop}, ${p[2].loop})`},
+  'maplinu': {"setup":(o,p)=>"", "loop":(o,p)=>`Module.maxiMap.linlin(${p[0].loop}, 0, 1, ${p[1].loop}, ${p[2].loop})`},
+  'mapb': {"setup":(o,p)=>"", "loop":(o,p)=>`Module.maxiMap.linexp(${p[0].loop}, -1, 1, ${p[1].loop}, ${p[2].loop})`},
+  'mapu': {"setup":(o,p)=>"", "loop":(o,p)=>`Module.maxiMap.linexp(${p[0].loop}, 0.0000001, 1, ${p[1].loop}, ${p[2].loop})`},
+  'maplin': {"setup":(o,p)=>"", "loop":(o,p)=>`Module.maxiMap.linlin(${p[0].loop}, ${p[1].loop}, ${p[2].loop},${p[3].loop}, ${p[4].loop})`},
+  'map': {"setup":(o,p)=>"", "loop":(o,p)=>`Module.maxiMap.linexp(${p[0].loop}, ${p[1].loop}, ${p[2].loop},${p[3].loop}, ${p[4].loop})`},
   'distort': {"setup":(o,p)=>`${o} = new Module.maxiDistortion()`, "loop":(o,p)=>`${o}.atanDist(${p[0].loop},${p[1].loop})`},
   'flanger': {"setup":(o,p)=>`${o} = new Module.maxiFlanger()`, "loop":(o,p)=>`${o}.flange(${p[0].loop},${p[1].loop},${p[2].loop},${p[3].loop},${p[4].loop})`},
   'chorus': {"setup":(o,p)=>`${o} = new Module.maxiChorus()`, "loop":(o,p)=>`${o}.chorus(${p[0].loop},${p[1].loop},${p[2].loop},${p[3].loop},${p[4].loop})`},
@@ -73,8 +95,6 @@ const jsFuncMap = {
                                   "loop":(o,p)=>`(${o}.isReady() ? ${o}stretch.play(${p[0].loop},${p[1].loop},${p[2].loop},${p[3].loop},0.0) : 0.0)`},
                                   // "loop":(o,p)=>`(0.0)`},
                                   // "loop":(o,p)=>`(${o}.isReady() ? 0.0 : 0.0)`},
-
-
 }
 
 class IRToJavascript {
