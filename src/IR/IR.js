@@ -45,7 +45,7 @@ const jsFuncMap = {
     `${o} = [];
     for (let i=0; i<${p.length}; i++){
       ${o}[i] = new Module.maxiOsc(); }`,
-    "loop":(o,p) => {let s=`(${o}[0].saw(${p[0].loop})`; for(let i=1; i < p.length; i++) s += `+${o}[${i}].saw(${p[i].loop})`; return s+")";}},
+    "loop":(o,p) => {let s=`(${o}[0].saw(${p[0].loop})`; for(let i=1; i < p.length; i++) s += `+${o}[${i}].saw(${p[i].loop})`; return s+")/"+`${p.length}`;}},
 
   'click': {
     "setup":(o,p)=>`${o} = new Module.maxiOsc(); ${o}.phaseReset(${p.length>2 ? p[2].loop : 0.0});`, 
