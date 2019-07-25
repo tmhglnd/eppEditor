@@ -172,6 +172,18 @@ Resonant lowpass filter
 hires(<signal>, <cutoff in Hz>, <resonance 0 upwards>);
 ```
 
+## Communication with JS
+### toJS
+Creates a transducer for sending a signal to a javascript model
+```
+toJS(<polling frequency>, <index identifier>, <optional extra argument>);
+```
+### fromJS
+Creates a transducer for receiving a signal from a javascript model
+```
+toJS(<polling frequency>, <index identifier>);
+```
+
 ## Math Operations
 ### sah
 Sample and hold
@@ -306,24 +318,12 @@ Flanger
  3. Feedback (0-1)
  4. Speed (Hz)
  5. Depth (0-1) -->
-
+ 
 ## Networking
 ### oscin
 Receive and open sound control signal
  1. OSC address
  2. Index of the OSC data element to observe (-1 means all elements)
-
-
-## Machine Learning
-### toJS
-Creates a transducer for sending a signal to a javascript model
- 1. Polling frequency
- 2. Data 1
- 3. Data 2
-### fromJS
-Creates a transducer for receiving a signal from a javascript model
- 1. Polling frequency
- 2. Data
 
 ## Lexer and Parsing
 
