@@ -45,11 +45,25 @@ loop(<filename>, <playback speed>);
 loop(\amenbreak, 0.8);
 ```
 
+## Variables
+A variable name can be made with the `#` and the `is` function
+
+### constant
+Store a constant in a variable
+```
+#bpm is constant(115)
+sample(\kick, click(#bpm, 4));
+```
+### signal
+Store the result of a signal processing chain for later usage
+```
+#sines is oscbank(200, 300, 400, 500, 600);
+distort(#sines, 10);
+```
+
 ## Effects
 ### distort
 Tanh distortion
- 1. Input signal
- 2. Distortion level (0 upwards)
 ```
 distort(<signal>, <distortion level 0 upwards>)
 ```
@@ -136,20 +150,26 @@ count(<beats per minute>, <start>, <end>);
 sine(mul(count(#bpm, 2, 12), 100));
 ```
 
-## Variables
-A variable name can be made with the `#` and the `is` function
-
-### constant
-Store a constant in a variable
+## Filters
+### lopass
+One pole lowpass filter
 ```
-#bpm is constant(115)
-sample(\kick, click(#bpm, 4));
+lopass(<signal>, <cutoff 0-1>);
 ```
-### signal
-Store the result of a signal processing chain for later usage
+### hipass
+One pole highpass filter
 ```
-#sines is oscbank(200, 300, 400, 500, 600);
-distort(#sines, 10);
+hipass(<signal>, <cutoff 0-1>);
+```
+### lores
+Resonant lowpass filter
+```
+lores(<signal>, <cutoff in Hz>, <resonance 0 upwards>);
+```
+### hires
+Resonant lowpass filter
+```
+hires(<signal>, <cutoff in Hz>, <resonance 0 upwards>);
 ```
 
 ## Math Operations
@@ -287,28 +307,7 @@ Flanger
  4. Speed (Hz)
  5. Depth (0-1) -->
 
-## Filters
-### lopass
-One pole lowpass filter
- 1. Input signal
- 2. Filter amount (0-1)
-### hipass
-One pole highpass filter
- 1. Input signal
- 2. Filter amount (0-1)
-### lores
-Resonant lowpass filter
- 1. Input signal
- 2. Filter frequency (Hz)
- 3. Resonance
-### hires
-Resonant lowpass filter
- 1. Input signal
- 2. Filter frequency (Hz)
- 3. Resonance
-
 ## Networking
-
 ### oscin
 Receive and open sound control signal
  1. OSC address
