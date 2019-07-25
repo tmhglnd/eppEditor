@@ -10,8 +10,10 @@ const lexer = moo.compile({
   paramEnd:     /\)/,
   paramBegin:   /\(/,
   variable:     /\#[a-zA-Z0-9]+/,
-  sample:       { match: /\\[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},
-  stretch:       { match: /\@[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},
+  string:       { match: /\\[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},
+  //string:       /\"[a-zA-Z0-9]+"/,
+  //sample:       { match: /\\[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},
+  //stretch:       { match: /\@[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},
   oscAddress:   /(?:\/[a-zA-Z0-9]+)+/,
   number:       /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?(?:[eE][-+]?[0-9]+)?\b/,
   semicolon:    /;/,
@@ -41,9 +43,9 @@ Expression ->
   %funcName _ ParameterList
   {% d=> semaIR.synth(d[0].value, d[2]["@params"])%}
   |
-  %sample _ ParameterList
-  {% d => semaIR.synth("sampler", d[2]["@params"].concat([semaIR.str(d[0].value)]))%}
-  |
+  # %sample _ ParameterList
+  # {% d => semaIR.synth("sampler", d[2]["@params"].concat([semaIR.str(d[0].value)]))%}
+  # |
   %stretch _ ParameterList
   {% d => semaIR.synth("stretch", d[2]["@params"].concat([semaIR.str(d[0].value)]))%}
   |
@@ -79,6 +81,9 @@ ParamElement ->
   |
   %paramBegin Params %paramEnd                               
   {%(d) => ({"@list":d[1]})%}
+  |
+  %string
+  {% (d) => semaIR.str(d[0].value) %}
 
 # Whitespace
 

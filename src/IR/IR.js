@@ -30,6 +30,18 @@ const jsFuncMap = {
     for (let i=0; i<${p.length}; i++){
       ${o}[i] = new Module.maxiOsc(); }`,
     "loop":(o,p) => {let s=`(${o}[0].sinewave(${p[0].loop})`; for(let i=1; i < p.length; i++) s += `+${o}[${i}].sinewave(${p[i].loop})`; return s+")";}},
+  'sawbank': {
+    "setup":(o,p) => 
+    `${o} = [];
+    for (let i=0; i<${p.length}; i++){
+      ${o}[i] = new Module.maxiOsc(); }`,
+    "loop":(o,p) => {let s=`(${o}[0].saw(${p[0].loop})`; for(let i=1; i < p.length; i++) s += `+${o}[${i}].saw(${p[i].loop})`; return s+")";}},  
+  'click': {"setup":(o,p)=>`${o} = new Module.maxiOsc(); ${o}.phaseReset(${p.length>2 ? p[2].loop : 0.0});`, "loop":(o,p)=>`${o}.impulse((${p[0].loop}/240)*${p[1].loop})`},
+  'count': {
+    "setup":(o,p)=>`${o} = new Module.maxiOsc(); 
+      ${o}.phaseReset(${p.length>3 ? p[3].loop : 0.0});`,
+    "loop":(o,p)=>`Math.floor(${o}.phasor(${p[0].loop}/240,${p[1].loop},${p[2].loop}))`},
+  
   'saw': {"setup":(o,p)=>`${o} = new Module.maxiOsc(); ${o}.phaseReset(${p.length>1 ? p[1].loop : 0.0});`, "loop":(o,p)=>`${o}.saw(${p[0].loop})`},
   'sine': {"setup":(o,p)=>`${o} = new Module.maxiOsc(); ${o}.phaseReset(${p.length>1 ? p[1].loop : 0.0});`, "loop":(o,p)=>`${o}.sinewave(${p[0].loop})`},
   'triangle': {"setup":(o,p)=>`${o} = new Module.maxiOsc(); ${o}.phaseReset(${p.length>1 ? p[1].loop : 0.0});`, "loop":(o,p)=>`${o}.triangle(${p[0].loop})`},
@@ -51,20 +63,20 @@ const jsFuncMap = {
   'div': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} / ${p[1].loop})`},
   'pow': {"setup":(o,p)=>"", "loop":(o,p)=>`Math.pow(${p[0].loop},${p[1].loop})`},
   'abs': {"setup":(o,p)=>"", "loop":(o,p)=>`Math.abs(${p[0].loop})`},
+  'sah':{"setup":(o,p)=>`${o} = new Module.maxiSampleAndHold();`, "loop":(o,p)=>`${o}.sah(${p[0].loop},${p[1].loop})`},
   'env': {"setup":(o,p)=>`${o} = new Module.maxiEnv();${o}.setAttack(${p[1].loop});${o}.setDecay(${p[2].loop});${o}.setSustain(${p[3].loop});${o}.setRelease(${p[4].loop})`, "loop":(o,p)=>`${o}.adsr(1,${p[0].loop})`},
   'sum': {"setup":(o,p)=>"", "loop":(o,p)=>{let s=`(${p[0].loop}`; for(let i=1; i < p.length; i++) s += `+${p[i].loop}`; return s+")";}},
   'mix': {"setup":(o,p)=>"", "loop":(o,p)=>{let s=`((${p[0].loop}`; for(let i=1; i < p.length; i++) s += `+${p[i].loop}`; return s+`)/${p.length})`;}},
   'prod': {"setup":(o,p)=>"", "loop":(o,p)=>{let s=`(${p[0].loop}`; for(let i=1; i < p.length; i++) s += `*${p[i].loop}`; return s+")";}},
   'maplinb': {"setup":(o,p)=>"", "loop":(o,p)=>`Module.maxiMap.linlin(${p[0].loop}, -1, 1, ${p[1].loop}, ${p[2].loop})`},
   'maplinu': {"setup":(o,p)=>"", "loop":(o,p)=>`Module.maxiMap.linlin(${p[0].loop}, 0, 1, ${p[1].loop}, ${p[2].loop})`},
-  'mapb': {"setup":(o,p)=>"", "loop":(o,p)=>`Module.maxiMap.linexp(${p[0].loop}, -1, 1, ${p[1].loop}, ${p[2].loop})`},
+  'map': {"setup":(o,p)=>"", "loop":(o,p)=>`Module.maxiMap.linexp(${p[0].loop}, -1, 1, ${p[1].loop}, ${p[2].loop})`},
   'mapu': {"setup":(o,p)=>"", "loop":(o,p)=>`Module.maxiMap.linexp(${p[0].loop}, 0.0000001, 1, ${p[1].loop}, ${p[2].loop})`},
   'maplin': {"setup":(o,p)=>"", "loop":(o,p)=>`Module.maxiMap.linlin(${p[0].loop}, ${p[1].loop}, ${p[2].loop},${p[3].loop}, ${p[4].loop})`},
-  'map': {"setup":(o,p)=>"", "loop":(o,p)=>`Module.maxiMap.linexp(${p[0].loop}, ${p[1].loop}, ${p[2].loop},${p[3].loop}, ${p[4].loop})`},
+  'scale': {"setup":(o,p)=>"", "loop":(o,p)=>`Module.maxiMap.linexp(${p[0].loop}, ${p[1].loop}, ${p[2].loop},${p[3].loop}, ${p[4].loop})`},
   'distort': {"setup":(o,p)=>`${o} = new Module.maxiDistortion()`, "loop":(o,p)=>`${o}.atanDist(${p[0].loop},${p[1].loop})`},
   'flanger': {"setup":(o,p)=>`${o} = new Module.maxiFlanger()`, "loop":(o,p)=>`${o}.flange(${p[0].loop},${p[1].loop},${p[2].loop},${p[3].loop},${p[4].loop})`},
   'chorus': {"setup":(o,p)=>`${o} = new Module.maxiChorus()`, "loop":(o,p)=>`${o}.chorus(${p[0].loop},${p[1].loop},${p[2].loop},${p[3].loop},${p[4].loop})`},
-  'delay': {"setup":(o,p)=>`${o} = new Module.maxiDelayline()`, "loop":(o,p)=>`${o}.dl(${p[0].loop},${p[1].loop},${p[2].loop})`},
   'lopass': {"setup":(o,p)=>`${o} = new Module.maxiFilter()`, "loop":(o,p)=>`${o}.lopass(${p[0].loop},${p[1].loop})`},
   'hipass': {"setup":(o,p)=>`${o} = new Module.maxiFilter()`, "loop":(o,p)=>`${o}.hipass(${p[0].loop},${p[1].loop})`},
   'lores': {"setup":(o,p)=>`${o} = new Module.maxiFilter()`, "loop":(o,p)=>`${o}.lores(${p[0].loop},${p[1].loop},${p[2].loop})`},
@@ -76,23 +88,25 @@ const jsFuncMap = {
   'toJS': {"setup":(o,p)=>`${o} = this.registerTransducer('${o}', ${p[0].loop})`, "loop":(o,p)=>`${o}.send(${p[1].loop}, ${p[2].loop})`},
   'fromJS': {"setup":(o,p)=>`${o} = this.registerTransducer('${o}', ${p[0].loop})`, "loop":(o,p)=>`${o}.receive(${p[1].loop})`},
   'adc': {"setup":(o,p)=>"", "loop":(o,p)=>`inputs[${p[0].loop}]`},
-  'sampler': {"setup":(o,p)=>`${o} = new Module.maxiSample();
-                                  ${o}.setSample(this.getSampleBuffer(${p[1].loop}));`,
-                                  "loop":(o,p)=>`(${o}.isReady() ? ${o}.playOnZX(${p[0].loop}) : 0.0)`},
+  'sample': {"setup":(o,p)=>`${o} = new Module.maxiSample();
+                                  ${o}.setSample(this.getSampleBuffer(${p[0].loop}));`,
+                                  "loop":(o,p)=>`(${o}.isReady() ? ${o}.playOnZX(${p[1].loop}) : 0.0)`},
   'loop': {"setup":(o,p)=>`${o} = new Module.maxiSample();
-                                  ${o}.setSample(this.getSampleBuffer(${p[1].loop}));`,
-                                  "loop":(o,p)=>`(${o}.isReady() ? ${o}.play(${p[0].loop}) : 0.0)`},
+                                  ${o}.setSample(this.getSampleBuffer(${p[0].loop}));`,
+                                  "loop":(o,p)=>`(${o}.isReady() ? ${o}.play(${p[1].loop}) : 0.0)`},
   'oscin':{"setup":(o,p)=>"", "loop":(o,p)=>`this.OSCTransducer(${p[0].loop},${p[1].loop})`},
-
-  'sah':{"setup":(o,p)=>`${o} = new Module.maxiSampleAndHold();`, "loop":(o,p)=>`${o}.sah(${p[0].loop},${p[1].loop})`},
-  'stretch': {"setup":(o,p)=>`${o} = new Module.maxiSample();
-                                  ${o}.setSample(this.getSampleBuffer(${p[4].loop}));
+  /*'stretch': {"setup":(o,p)=>`${o} = new Module.maxiSample();
+                                  ${o}.setSample(this.getSampleBuffer(${p[0].loop}));
                                   ${o}stretch = new Module.maxiStretch();
                                   ${o}stretch.setSample(${o});
                                   `,
-                                  "loop":(o,p)=>`(${o}.isReady() ? ${o}stretch.play(${p[0].loop},${p[1].loop},${p[2].loop},${p[3].loop},0.0) : 0.0)`},
+                                  // "loop":(o,p)=>`(${o}.isReady() ? ${o}stretch.play(${p[1].loop},${p[2].loop},${p[3].loop},${p[4].loop},0.0) : 0.0)`},
+                                  "loop":(o,p)=>`${o}.isReady() ? ${o}stretch.play(${p[1].loop},${p[2].loop},${p[3].loop},${p[4].loop},${p[5].loop}) : 0.0`},
                                   // "loop":(o,p)=>`(0.0)`},
-                                  // "loop":(o,p)=>`(${o}.isReady() ? 0.0 : 0.0)`},
+                                  // "loop":(o,p)=>`(${o}.isReady() ? 0.0 : 0.0)`},*/
+  'delay': {"setup":(o,p)=>`${o} = new Module.maxiDelayline();
+    ${o}wet = ${p.length>3 ? p[3].loop : 0.4}`,
+  "loop":(o,p)=>`${p[0].loop} * (1 -${o}wet) + Math.tanh(${o}.dl(${p[0].loop},${p[1].loop}*44.1,${p[2].loop})) * ${o}wet`},
 }
 
 class IRToJavascript {
