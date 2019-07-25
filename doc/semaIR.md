@@ -1,5 +1,5 @@
 
-# **Sema Intermediate Representation**
+# **Sema Intermediate Representation (Custom)**
 
 # @lang
 This is the top level node of the tree, and contains an array of branches
@@ -47,112 +47,184 @@ Get a variable
 ```
 It needs a function name, and an array of parameters.   You can use any of the options below:
 
+## Synthesis
+
+### oscbank
+A bank of sinewave oscillators
+```
+oscbank(<freq_1>, <freq_2>, ..., <freq_n>);
+oscbank(200, 300, 400, 500, 600);
+```
+
+### sawbank
+A bank of saw oscillators
+```
+sawbank(<freq_1>, <freq_2>, ..., <freq_n>);
+sawbank(200, 300, 400, 500, 600);
+```
+
+### amsynth
+A simple Amplitude Modulation (bipolar, Ringmodulation) of 2 sinewave oscillators
+```
+amsynth(<carrier frequency in Hz>, <modulation frequency in Hz>);
+amsynth(200, 300);
+```
+
+### fmsynth
+A simple Frequency Modulation of a sinewave oscillators
+```
+fmsynth(<carrier frequency in Hz>, <frequency modulation ratio>, <frequency modulation depth>);
+fmsynth(200, 2, 5);
+```
+
 ## Oscillators
 
 ### saw
 A saw oscillator
-Parameters:
- 1. Frequency (Hz)
- 2. Initial Phase (0 - 1)
-### sin
+```
+saw(<frequenzy in Hz>, <initial phase 0-1, optional>);
+saw(200, 0.5);
+```
+### sine
 A sinewave oscillator
-Parameters:
- 1. Frequency (Hz)
- 2. Initial Phase (0 - 1)
-### tri
+```
+sine(<frequenzy in Hz>, <initial phase 0-1, optional>);
+sine(200, 0.5);
+```
+### triangle
 A triangle wave oscillator
-Parameters:
- 1. Frequency (Hz)
- 2. Initial Phase (0 - 1)
-### sqr
+```
+triangle(<frequenzy in Hz>, <initial phase 0-1, optional>);
+triangle(200, 0.5);
+```
+### square
 A square wave oscillator
-Parameters:
- 1. Frequency (Hz)
- 2. Initial Phase (0 - 1)
-### pha
+```
+square(<frequenzy in Hz>, <initial phase 0-1, optional>);
+square(200, 0.5);
+```
+### phasor
 A phasor, rising from 0 to 1
-Parameters:
- 1. Frequency (Hz)
- 2. Initial Phase (0 - 1)
-### ph2
+```
+phasor(<frequenzy in Hz>, <initial phase 0-1, optional>);
+phasor(200, 0.5);
+```
+### phasor2
 A phasor with configurable start and end levels
-Parameters:
- 1. Frequency (Hz)
- 2. Start level
- 3. End level
- 4. Initial Phase (0 - 1)
-### pul
+```
+phasor(<frequenzy in Hz>, <start>, <end>, <initial phase 0-1, optional>);
+phasor(200, -1, 1, 0.5);
+```
+### pulse
 A pulse oscillator with modulatable phase width
-Parameters:
- 1. Frequency (Hz)
- 2. Phase width (0-1)
- 3. Initial Phase (0 - 1)
-### imp
-An impulse generator
-Parameters:
- 1. Frequency (Hz)
- 2. Initial Phase (0 - 1)
+```
+pulse(<frequenzy in Hz>, <pulse width 0-1>, <initial phase 0-1, optional>);
+pulse(200, 0.1, 0.5);
+```
+### impulse
+An impulse generator, useful for triggering one-shot samples
+```
+impulse(<frequenzy in Hz>, <initial phase 0-1, optional>);
+impulse(4, 0.5);
+sample(\kick, impulse(2));
+```
+### click
+An impulse generator, with bpm as argument and a division and offset parameter
+```
+click(<beats per minute>, <bar division>, <offset in bar 0-1, optional>);
+click(110, 4)
+sample(\kick, click(110, 4));
+```
 ### sawn
 An band limited saw wave oscillator
-Parameters:
- 1. Frequency (Hz)
- 2. Initial Phase (0 - 1)
-### noiz
+```
+sawn(<frequenzy in Hz>, <initial phase 0-1, optional>);
+sawn(200, 0.5);
+```
+### noise
 An white noise generator
-Parameters:
- 1. Amplitude
+```
+noise(<amplitude>);
+noise(0.8);
+```
+
+## Variables
+A variable name can be made with the `#` and the `is` function
+
+### constant
+Store a constant in a variable
+```
+#bpm is constant(115)
+sample(\kick, click(#bpm, 4));
+```
+### signal
+Store the result of a signal processing chain for later usage
+```
+#sines is oscbank(200, 300, 400, 500, 600);
+distort(#sines, 10);
+```
 
 ## Math Operations
 ### gt
 Outputs 1 if $A > B$, otherwise 0
-Parameters:
- 1. A
- 2. B
+```
+gt(<value/signal>, <value/signal>);
+```
 ### lt
 Outputs 1 if $A < B$, otherwise 0
-Parameters:
- 1. A
- 2. B
+```
+lt(<value/signal>, <value/signal>);
+```
 ### mod
-A modulo B
-Parameters:
- 1. A
- 2. B
+return A modulo B
+```
+lt(<value/signal>, <value/signal>);
+```
 ### add
 $A + B$
-Parameters:
- 1. A
- 2. B
+```
+add(<value/signal>, <value/signal>);
+```
 ### sub
 $A - B$
-Parameters:
- 1. A
- 2. B
+```
+sub(<value/signal>, <value/signal>);
+```
 ### mul
 $A * B$
-Parameters:
- 1. A
- 2. B
+```
+mul(<value/signal>, <value/signal>);
+```
 ### div
 $A / B$
-Parameters:
- 1. A
- 2. B
+```
+div(<value/signal>, <value/signal>);
+```
 ### pow
 $A ^ B$
-Parameters:
- 1. A
- 2. B
+```
+pow(<value/signal>, <value/signal>);
+```
 ### abs
 The absolute value of A
-Parameters:
- 1. A
+```
+abs(<value/signal>);
+```
 ### sum
-Sums all parameters $\sum(x_1, x_2 ... x_n)$
+Sums all parameters
+```
+sum(<x_1>, <x_2>, ..., <x_n>);
+```
 ### prod
-Product of all parameters $\prod(x_1, x_2 ... x_n)$
+Product of all parameters
+```
+prod(<x_1>, <x_2>, ..., <x_n>);
+```
 ### mix
-Mean of all parameters $\frac{\sum(x_1, x_2 ... x_n)}{n}$
+Root Mean Square (RMS) of all parameters for an equal power mix of non-correlated sounds
+```
+mix(<x_1>, <x_2>, ..., <x_n>);
+```
 
 ## Modulation
 ### env
@@ -207,16 +279,17 @@ Parameters:
  5. Upper bound of destination range
 
 ## Effects
-### dist
+### distort
 Tanh distortion
  1. Input signal
  2. Distortion level (0 upwards)
-### dl
+### delay
 Delay
  1. Input signal
  2. Delay time (in samples)
  3. Feedback
-### flange
+ 4. Wet (optional, default = 0.4)
+### flanger
 Flanger
  1. Input signal
  2. Delay (ms)
@@ -232,27 +305,27 @@ Flanger
  5. Depth (0-1)
 
 ## Filters
-### lpf
+### lopass
 One pole lowpass filter
  1. Input signal
  2. Filter amount (0-1)
-### hpf
+### hipass
 One pole highpass filter
  1. Input signal
  2. Filter amount (0-1)
-### lpz
+### lores
 Resonant lowpass filter
  1. Input signal
  2. Filter frequency (Hz)
  3. Resonance
-### hpz
+### hires
 Resonant lowpass filter
  1. Input signal
  2. Filter frequency (Hz)
  3. Resonance
 
 ## Sampling
-### sampler
+### sample
 Creates a sampler with a signal input, the sample plays when the input has a positive zero crossing
  1. Input signal
  2. Sample name
@@ -274,12 +347,12 @@ Receive and open sound control signal
 
 
 ## Machine Learning
-### toModel
+### toJS
 Creates a transducer for sending a signal to a javascript model
  1. Polling frequency
  2. Data 1
  3. Data 2
-### fromModel
+### fromJS
 Creates a transducer for receiving a signal from a javascript model
  1. Polling frequency
  2. Data
