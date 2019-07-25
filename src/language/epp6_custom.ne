@@ -66,7 +66,7 @@ Params ->
   ParamElement                                                   
   {% (d) => ([d[0]]) %}
   |
-  ParamElement _ %separator _ Params                                          
+  ParamElement _ %separator _ Params _                                        
   {% d => [d[0]].concat(d[4]) %}
 
 ParamElement ->
