@@ -1,54 +1,7 @@
 
 # **Sema Intermediate Representation (Custom)**
 
-# @lang
-This is the top level node of the tree, and contains an array of branches
-
-```
-{ "@lang" : [branches]}
-  ```
-# @sigOut  
-
-Output a signal from the signal engine
-```
-{"@sigOut": <branch>}
-```
-
-# @spawn
-Execute a branch of a tree
-```
-{ "@spawn":<branch>}
-```
-# @num
-```
-{"@num":{value:val}}
-```
-# @str
-```
-{"@string":val}
-```
-# @setvar
-Set a variable, with the output from a branch of the tree.
-```
-{"@setvar": {"@varname":<string>,"@varvalue":<branch>}};
-```
-# @getvar
-Get a variable
-
-```
-{"@getvar":<string>}
-```
-
-# @sigp
-@sigp represents a signal processor or signal generation.  It looks like this:
-
-```
-{"@sigp": {"@params":[params], "@func":<string>}}
-```
-It needs a function name, and an array of parameters.   You can use any of the options below:
-
 ## Synthesis
-
 ### oscbank
 A bank of sinewave oscillators
 ```
@@ -77,8 +30,36 @@ fmsynth(<carrier frequency in Hz>, <frequency modulation ratio>, <frequency modu
 fmsynth(200, 2, 5);
 ```
 
-## Oscillators
+## Sampling
+### sample
+Creates a sampler with a signal input, the sample plays when the input has a positive zero crossing
+```
+sample(<filename>, <trigger by positive zero-crossing>);
+sample(\kick, impulse(4));
+```
 
+### loop
+Creates a sampler that plays in a continuous loop
+```
+loop(<filename>, <playback speed>);
+loop(\amenbreak, 0.8);
+```
+
+## Effects
+### distort
+Tanh distortion
+ 1. Input signal
+ 2. Distortion level (0 upwards)
+```
+distort(<signal>, <distortion level 0 upwards>)
+```
+### delay
+A delay effect with feedback added to the original signal
+```
+delay(<signal>, <delay time in ms>, <feedback 0-1>, <wet, optional, default=0.4>);
+```
+
+## Oscillators
 ### saw
 A saw oscillator
 ```
@@ -128,13 +109,6 @@ impulse(<frequenzy in Hz>, <initial phase 0-1, optional>);
 impulse(4, 0.5);
 sample(\kick, impulse(2));
 ```
-### click
-An impulse generator, with bpm as argument and a division and offset parameter
-```
-click(<beats per minute>, <bar division>, <offset in bar 0-1, optional>);
-click(110, 4)
-sample(\kick, click(110, 4));
-```
 ### sawn
 An band limited saw wave oscillator
 ```
@@ -146,6 +120,20 @@ An white noise generator
 ```
 noise(<amplitude>);
 noise(0.8);
+```
+### click
+An impulse generator, with bpm as argument and a division and offset parameter
+```
+click(<beats per minute>, <bar division>, <offset in bar 0-1, optional>);
+click(110, 4);
+sample(\kick, click(110, 4));
+```
+### count
+A counter signal for 1 bar, set the speed in bpm, start count and end count
+```
+count(<beats per minute>, <start>, <end>);
+#bpm is constant(100);
+sine(mul(count(#bpm, 2, 12), 100));
 ```
 
 ## Variables
@@ -165,6 +153,12 @@ distort(#sines, 10);
 ```
 
 ## Math Operations
+### sah
+Sample and hold
+```
+sah(<signal>, <resample and hold time in ms>);
+```
+
 ### gt
 Outputs 1 if $A > B$, otherwise 0
 ```
@@ -237,31 +231,31 @@ Parameters:
  5. Release
 
 ## Mapping
-### blin
-Map input into a linear range, assuming bipolar source (between -1 and 1)
-Parameters:
- 1. Input signal
- 2. Lower bound of destination range
- 3. Upper bound of destination range
-### bexp
+### map
 Map input into an exponential range, assuming bipolar source (between -1 and 1)
 Parameters:
  1. Input signal
  2. Lower bound of destination range
  3. Upper bound of destination range
-### ulin
-Map input into a linear range, assuming unipolar source (between 0 and 1)
-Parameters:
- 1. Input signal
- 2. Lower bound of destination range
- 3. Upper bound of destination range
-### uexp
+### mapu
 Map input into an exponential range, assuming unipolar source (between 0 and 1)
 Parameters:
  1. Input signal
  2. Lower bound of destination range
  3. Upper bound of destination range
-### linlin
+### maplinb
+Map input into a linear range, assuming bipolar source (between -1 and 1)
+Parameters:
+ 1. Input signal
+ 2. Lower bound of destination range
+ 3. Upper bound of destination range
+### maplinu
+Map input into a linear range, assuming unipolar source (between 0 and 1)
+Parameters:
+ 1. Input signal
+ 2. Lower bound of destination range
+ 3. Upper bound of destination range
+### maplin
 Map input into a linear range, specifying the range of the source
 Parameters:
  1. Input signal
@@ -269,7 +263,7 @@ Parameters:
  3. Upper bound of source range
  4. Lower bound of destination range
  5. Upper bound of destination range
-### linexp
+### scale
 Map input into an exponential range, specifying the range of the source
 Parameters:
  1. Input signal
@@ -278,18 +272,7 @@ Parameters:
  4. Lower bound of destination range
  5. Upper bound of destination range
 
-## Effects
-### distort
-Tanh distortion
- 1. Input signal
- 2. Distortion level (0 upwards)
-### delay
-Delay
- 1. Input signal
- 2. Delay time (in samples)
- 3. Feedback
- 4. Wet (optional, default = 0.4)
-### flanger
+<!-- ### flanger
 Flanger
  1. Input signal
  2. Delay (ms)
@@ -302,7 +285,7 @@ Flanger
  2. Delay (ms)
  3. Feedback (0-1)
  4. Speed (Hz)
- 5. Depth (0-1)
+ 5. Depth (0-1) -->
 
 ## Filters
 ### lopass
@@ -324,20 +307,6 @@ Resonant lowpass filter
  2. Filter frequency (Hz)
  3. Resonance
 
-## Sampling
-### sample
-Creates a sampler with a signal input, the sample plays when the input has a positive zero crossing
- 1. Input signal
- 2. Sample name
-### loop
-Creates a sampler that plays in a continuous loop
- 1. Speed
- 2. Sample name
-### sah
-Sample and hold
-1. Input signal
-2. Hold time (ms)
-
 ## Networking
 
 ### oscin
@@ -356,3 +325,51 @@ Creates a transducer for sending a signal to a javascript model
 Creates a transducer for receiving a signal from a javascript model
  1. Polling frequency
  2. Data
+
+## Lexer and Parsing
+
+# @lang
+This is the top level node of the tree, and contains an array of branches
+
+```
+{ "@lang" : [branches]}
+  ```
+# @sigOut  
+
+Output a signal from the signal engine
+```
+{"@sigOut": <branch>}
+```
+
+# @spawn
+Execute a branch of a tree
+```
+{ "@spawn":<branch>}
+```
+# @num
+```
+{"@num":{value:val}}
+```
+# @str
+```
+{"@string":val}
+```
+# @setvar
+Set a variable, with the output from a branch of the tree.
+```
+{"@setvar": {"@varname":<string>,"@varvalue":<branch>}};
+```
+# @getvar
+Get a variable
+
+```
+{"@getvar":<string>}
+```
+
+# @sigp
+@sigp represents a signal processor or signal generation.  It looks like this:
+
+```
+{"@sigp": {"@params":[params], "@func":<string>}}
+```
+It needs a function name, and an array of parameters.   You can use any of the options below:
