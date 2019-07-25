@@ -63,6 +63,7 @@ let audio;
 let mainTheme = "seti";
 
 let editor1, editor2;
+let editor3;
 
 let parser;
 
@@ -200,7 +201,7 @@ function createEditor2() {
 }
 
 function createEditor3() {
-  let defaultEditorCode3 = "//BNF grammar";
+  let defaultEditorCode3 = "//COMMENT BOX:";
   let editor3code = window.localStorage.getItem("editor3");
   if (editor3code)
     defaultEditorCode3 = editor3code;
@@ -208,17 +209,17 @@ function createEditor3() {
   editor3 = CodeMirror(document.getElementById('editor3'), {
     value: defaultEditorCode3,
     lineNumbers: true,
-    mode: "javascript",
-    theme: "oceanic-next",
+    mode: "none",
+    theme: mainTheme,
     lineWrapping: true,
     extraKeys: {
       // ["Cmd-Enter"]: () => evalEditor3Expression(),
       // ["Ctrl-Enter"]: () => evalEditor3Expression(),
-      ["Shift-Enter"]: () => evalEditor3ExpressionBlock(),
+      //["Shift-Enter"]: () => evalEditor3ExpressionBlock(),
     }
 
   });
-  editor2.setSize('100%', '100%');
+  editor3.setSize('100%', '100%');
 }
 
 
@@ -536,6 +537,8 @@ document.addEventListener("DOMContentLoaded", () => {
   createEditor1();
 
   createEditor2();
+
+  createEditor3();
 
   createAnalysers();
 

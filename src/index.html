@@ -5,6 +5,7 @@
 	<title>eppEditor</title>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.js"></script>
 </head>
 
 <body>
@@ -19,10 +20,11 @@
 			</button>
 			<!-- <button class="button" id="buttonStartAudio"><span style="font-size:200%">Sema</span><br><br>Start Audio</button> -->
 		</div>
+
 		<div class="containerHeader">
-			<div id="logoContainer">
-				<!-- <img id="logo" src=<%=require("../assets/img/IXI.png")%> /> -->
-			</div>
+			<!-- <div id="logoContainer">
+				<img id="logo" src=<%=require("../assets/img/IXI.png")%> />
+			</div> -->
 			<!-- <ul class="headerItemList">
 				<li class="headerItem"><a href="#">Home</a></li>
 				<li class="headerItem"><a href="#">About</a></li>
@@ -36,19 +38,58 @@
 
 			<div id="audioWorkletIndicator"></div> -->
 		</div>
-		<div class="containerMenu">
-		</div>
-		<div class="containerMain">
-			<div id="editor1"></div>
-		</div>
-		<div class="containerMain2">
-			<!-- <div id="containerTabs"></div> -->
-			<div id="editor2"></div>
-			<!-- <div id="editor3"></div> -->
-		</div>
-		<div id="containerFooter" />
-		<!-- <div id="containerButtons"> -->
-		</div>
+		
+		<div class="containerMenu"></div>
+		<div class="containerMain"><div id="editor1"></div></div>	
+		<div class="containerMain2"><div id="editor2"></div></div>
+		<div class="containerMain3"><div id="editor3"></div></div>
+
+		<div id="containerFooter"></div>
+		<!-- <div id="containerButtons"></div> -->
+		<!-- <div id="containerUnderlayP5"></div> -->
+		<!--
+		<div id='containerUnderlay'></div>
+  		<script>
+			// let sketch = function(p) {
+			// 	p.setup = function(){
+			// 		p.createCanvas(p.windowWidth, p.windowHeight);
+			// 		p.background(0);
+			// 	}
+
+			// 	p.draw = function(){
+			// 		p.background(10);
+			// 		translate(p.width/2, p.height/2);
+			// 		p.noStroke();
+			// 		p.fill(200);
+			// 		p.ellips(0, 0, 50, 50);
+			// 	}
+			// };
+			// new p5(sketch, 'containerUnderlay');
+
+			const s = (p5) => {
+				p5.setup = () => {
+					p5.createCanvas(500, 500);
+				};
+
+				p5.draw = () => {
+				
+				p5.translate(p5.width/2, p5.heigth/2);        
+				p5.background(0, 10);
+				
+				for (var i=0; i<3; i++){
+					cl[i] = Math.random()*255.0;
+				}
+				p5.fill(cl);
+				p5.ellipse(p.mouseX, p.mouseY, radius, radius);
+				//p5.fill(255);
+				//p5.text("regression result:"+cl, 50, 50);
+				};
+			};
+
+			let myp5 = new p5(s);
+
+			console.log("created p5");
+		</script> -->
 	</div>
 </body>
 

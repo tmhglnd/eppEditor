@@ -15,6 +15,7 @@
   resize: vertical;
   overflow: auto !important;
   font-size: 1em;
+  /* background: rgba(255, 0, 0, 1); */
 }
 
 ::-webkit-scrollbar {
@@ -44,7 +45,16 @@
   /* resize: both; */
 }
 
-
+#editor3 {
+  /* float:left; */
+  /* height:500px; */
+  width: 100%;
+  height: 100%;
+  border:1px solid black;
+  margin: 0px;
+  /* margin: 5px 25px 0px 25px; */
+  /* resize: both; */
+}
 
 /* .handle {
   background: #f7f7f7;

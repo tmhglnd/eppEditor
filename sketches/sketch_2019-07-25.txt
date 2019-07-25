@@ -1,0 +1,45 @@
+#volume is constant(1);
+
+#wv1 is lores(noise(1), mul(abs(sine(0.02)), 5500), mapb(sine(0.001), 3, 20));
+#wv2 is lores(noise(1), mapb(sine(0.05), 250, 4000), mapb(sine(0.005), 5, 20));
+
+#fm1 is add(400, mul(sine(200), 2000));
+#sin1 is mul(sine(0.01), sine(#fm1));
+#sin2 is mul(sine(0.1), mul(sine(300), sine(600)));
+#sin3 is mul(sine(0.3), mul(sine(900), sine(300)));
+
+#chan1 is mul(sum(#sin1, #sin2, #sin3), 1);
+#note is toFreq(mapb(sah(noise(1), 100), 48, 72));
+#chan2 is sine(#note);
+#master is mul(1, sum(#wv1, #wv2, #chan1));
+
+#am is amsynth(500, 2);
+mul(#am, #volume);
+
+====================================================
+
+#volume is constant(1);
+
+#simpleAm is amsynth(300, 200);
+#modAm is amsynth(200, mapb(sine(10), 300, 600));
+
+#note is toFreq(mapu(sah(noise(1), 150), 36, 60));
+
+#simpleFm is fmsynth(#note, mapu(phasor(1), 0.5, 1), mapb(sine(10), 0.5, 15));
+
+#oscBnk is oscbank(300, 400, 500);
+
+#master is sum(#modAm, #simpleFm);
+
+mul(#oscBnk, #volume);
+
+====================================================
+
+#oscs is oscbank(mapb(sine(0.01), 100, 400), mapb(sine(0.005), 300, 700), mapb(sine(0.05), 600, 1000));
+
+#simpleBank is oscbank(500, 501, 503, 250.1, 250.05);
+
+#master is mul(#oscs, sine(5));
+   
+#smp is sample('break06', sine(map(sine(0.1),-1, 1, 0.5, 10)));
+#lp is mul(loop('break01', 0.1), noise(1));
