@@ -327,47 +327,41 @@ Receive and open sound control signal
 
 ## Lexer and Parsing
 
-# @lang
+### @lang
 This is the top level node of the tree, and contains an array of branches
-
 ```
 { "@lang" : [branches]}
   ```
-# @sigOut  
-
+### @sigOut  
 Output a signal from the signal engine
 ```
 {"@sigOut": <branch>}
 ```
-
-# @spawn
+### @spawn
 Execute a branch of a tree
 ```
 { "@spawn":<branch>}
 ```
-# @num
+### @num
 ```
 {"@num":{value:val}}
 ```
-# @str
+### @str
 ```
 {"@string":val}
 ```
-# @setvar
+### @setvar
 Set a variable, with the output from a branch of the tree.
 ```
 {"@setvar": {"@varname":<string>,"@varvalue":<branch>}};
 ```
-# @getvar
+### @getvar
 Get a variable
-
 ```
 {"@getvar":<string>}
 ```
-
-# @sigp
+### @sigp
 @sigp represents a signal processor or signal generation.  It looks like this:
-
 ```
 {"@sigp": {"@params":[params], "@func":<string>}}
 ```
