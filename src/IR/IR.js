@@ -38,7 +38,7 @@ const jsFuncMap = {
     `${o} = [];
     for (let i=0; i<${p.length}; i++){
       ${o}[i] = new Module.maxiOsc(); }`,
-    "loop":(o,p) => {let s=`(${o}[0].sinewave(${p[0].loop})`; for(let i=1; i < p.length; i++) s += `+${o}[${i}].sinewave(${p[i].loop})`; return s+")";}},
+    "loop":(o,p) => {let s=`(${o}[0].sinewave(${p[0].loop})`; for(let i=1; i < p.length; i++) s += `+${o}[${i}].sinewave(${p[i].loop})`; return s+")/"+`${p.length}`;}},
 
   'sawbank': {
     "setup":(o,p) => 
