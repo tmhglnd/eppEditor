@@ -3,7 +3,7 @@
 
 *This language is forked from the [SEMA project](https://github.com/mimic-sussex/eppEditor) and it uses the [Maximilian.js](https://github.com/micknoise/Maximilian) audio engine for webaudio in the browser. SEMA is a Livecoding Language Design Platform created by the amazing team from the [MIMIC Project](https://mimicproject.com/about). Sema is a playground where you can rapid prototype mini-languages for live coding that integrate signal synthesis, machine learning and machine listening.*
 
-MAIA has a grammar that focuses on readability and various extra functionalities in the sound engine then the original SEMA grammar. It has more abstracted functions (such as synths) and a few more 'musical' methods that generate rhythms.
+MAIA is a livecoding mini-language with a grammar that focuses on readability and various extra functionalities in the sound engine other than the default SEMA grammar. It has more abstracted functions (such as synths) and a few more 'musical' methods that generate rhythms.
 
 ## Content
 
