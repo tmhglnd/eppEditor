@@ -1,241 +1,254 @@
+# Sema – Live Coding Language Design Playground #
 
-# **MAIA - Audio Livecoding Language in the Browser**
+Sema is a playground where you can rapid prototype mini-languages for live coding that integrate signal synthesis, machine learning and machine listening. 
 
-*This language is forked from the [SEMA project](https://github.com/mimic-sussex/eppEditor) and it uses the [Maximilian.js](https://github.com/micknoise/Maximilian) audio engine for webaudio in the browser. SEMA is a Livecoding Language Design Platform created by the amazing team from the [MIMIC Project](https://mimicproject.com/about). Sema is a playground where you can rapid prototype mini-languages for live coding that integrate signal synthesis, machine learning and machine listening.*
+Sema provides an online integrated environment that implements support for designing both abstract high-level languages and more powerful low-level languages.
 
-MAIA has a grammar that focuses on readability and various extra functionalities in the sound engine then the original SEMA grammar. It has more abstracted functions (such as synths) and a few more 'musical' methods that generate rhythms.
+Sema implements a set of core design principles:
 
-## Content
+* Integrated signal engine — There is no conceptual split between the language and signal engine. Everything is a signal.
 
-- Basic Language Usage
-- Basic Oscillators
-- Musical Generators
-- Synthesis
-- Sampling
-- Variables
-- Effects
-- Communication with JS
-- Math Operations
-- Modulation
-- Mapping
-- Networking
-- Lexer and Parsing
+* Single sample signal processing – Per-sample sound processing including techniques that use feedback loops, such as physical modelling, reverberation and IIR filtering.
 
-## Basic Language Usage
+* Sample rate transduction — It is simpler to do signal processing with one principal sample rate, the audio rate. Different sample rate requirements of dependent objects can be resolved by upsampling and downsampling, using a transducer. The transducer concept enables us to accommodate a variety of processes with varying sample rates (video, spectral rate, sensors, ML model inference) within a single engine.
 
-All function calls start with `(`, end with `)` and the code line ends with a semicolon `;`.
-```
-sine(500);
-```
+* Minimal abstractions — There are no high-level abstractions such as buses, synths, nodes, servers, or any language scaffolding in our signal engine. Such abstractions sit within the end-user language design space.
 
-A variable is created with the `#` sign, and a value is stored with the `is` operator. Variables can be re-used in other functions.
-```
-#lead is saw(500);
-#bass is saw(125);
-mix(#lead, #bass);
+## Dependencies
+
+Sema requires the following dependencies to be installed:
+
+ - [Chrome browser](https://www.google.com/chrome/) 
+ - Node.js version 8.9 or higher
+ - [NPM cli](https://docs.npmjs.com/cli/npm) OR [Yarn](https://yarnpkg.com/en/)
+ 
+## How to build and run the Sema playground on your machine 
+
+```sh
+cd sema
+yarn
+yarn build
+yarn dev
 ```
 
-Functions can be nested to modulate other parameters.
-```
-sine(mul(sine(1), 500));
-```
----
-## Basic Oscillators
-### sine
-A sinewave oscillator. Provide the frequency as first argument, set the amplitude and phase with optional second and third argument.
-```
-sine(<frequenzy in Hz>, <amplitude - optional>, <initial phase 0-1, optional>);
+# **Sema Intermediate Representation**
 
-sine(200, 0.5);
+# @lang
+This is the top level node of the tree, and contains an array of branches
+
 ```
+{ "@lang" : [branches]}
+  ```
+# @sigOut  
+
+Output a signal from the signal engine
+```
+{"@sigOut": <branch>}
+```
+
+# @spawn
+Execute a branch of a tree
+```
+{ "@spawn":<branch>}
+```
+# @num
+```
+{"@num":{value:val}}
+```
+# @str
+```
+{"@string":val}
+```
+# @setvar
+Set a variable, with the output from a branch of the tree.
+```
+{"@setvar": {"@varname":<string>,"@varvalue":<branch>}};
+```
+# @getvar
+Get a variable
+
+```
+{"@getvar":<string>}
+```
+
+# @sigp
+@sigp represents a signal processor or signal generation.  It looks like this:
+
+```
+{"@sigp": {"@params":[params], "@func":<string>}}
+```
+It needs a function name, and an array of parameters.   You can use any of the options below:
+
+## Oscillators
+
 ### saw
-A saw oscillator. Provide the frequency as first argument, set the amplitude and phase with optional second and third argument.
-```
-saw(<frequenzy in Hz>, <amplitude - optional>, <initial phase 0-1, optional>);
-
-saw(200, 0.5);
-```
+A saw oscillator
+Parameters:
+ 1. Frequency (Hz)
+ 2. Initial Phase (0 - 1)
+### sin
+A sinewave oscillator
+Parameters:
+ 1. Frequency (Hz)
+ 2. Initial Phase (0 - 1)
+### tri
+A triangle wave oscillator
+Parameters:
+ 1. Frequency (Hz)
+ 2. Initial Phase (0 - 1)
+### sqr
+A square wave oscillator
+Parameters:
+ 1. Frequency (Hz)
+ 2. Initial Phase (0 - 1)
+### pha
+A phasor, rising from 0 to 1
+Parameters:
+ 1. Frequency (Hz)
+ 2. Initial Phase (0 - 1)
+### ph2
+A phasor with configurable start and end levels
+Parameters:
+ 1. Frequency (Hz)
+ 2. Start level
+ 3. End level
+ 4. Initial Phase (0 - 1)
+### pul
+A pulse oscillator with modulatable phase width
+Parameters:
+ 1. Frequency (Hz)
+ 2. Phase width (0-1)
+ 3. Initial Phase (0 - 1)
+### imp
+An impulse generator
+Parameters:
+ 1. Frequency (Hz)
+ 2. Initial Phase (0 - 1)
 ### sawn
-An band limited saw wave oscillator. Provide the frequency as first argument, set the amplitude and phase with optional second and third argument.
-```
-sawn(<frequenzy in Hz>, <amplitude - optional>, <initial phase 0-1, optional>);
+An band limited saw wave oscillator
+Parameters:
+ 1. Frequency (Hz)
+ 2. Initial Phase (0 - 1)
+### noiz
+An white noise generator
+Parameters:
+ 1. Amplitude
 
-sawn(200, 0.5);
-```
-### triangle
-A triangle wave oscillator. Provide the frequency as first argument, set the amplitude and phase with optional second and third argument.
-```
-triangle(<frequenzy in Hz>, <amplitude - optional>, <initial phase 0-1, optional>);
+## Math Operations
+### gt
+Outputs 1 if $A > B$, otherwise 0
+Parameters:
+ 1. A
+ 2. B
+### lt
+Outputs 1 if $A < B$, otherwise 0
+Parameters:
+ 1. A
+ 2. B
+### mod
+A modulo B
+Parameters:
+ 1. A
+ 2. B
+### add
+$A + B$
+Parameters:
+ 1. A
+ 2. B
+### sub
+$A - B$
+Parameters:
+ 1. A
+ 2. B
+### mul
+$A * B$
+Parameters:
+ 1. A
+ 2. B
+### div
+$A / B$
+Parameters:
+ 1. A
+ 2. B
+### pow
+$A ^ B$
+Parameters:
+ 1. A
+ 2. B
+### abs
+The absolute value of A
+Parameters:
+ 1. A
+### sum
+Sums all parameters $\sum(x_1, x_2 ... x_n)$
+### prod
+Product of all parameters $\prod(x_1, x_2 ... x_n)$
+### mix
+Mean of all parameters $\frac{\sum(x_1, x_2 ... x_n)}{n}$
 
-triangle(200, 0.5);
-```
-### square
-A square wave oscillator. Provide the frequency as first argument, set the amplitude and phase with optional second and third argument.
-```
-square(<frequenzy in Hz>, <amplitude - optional>, <initial phase 0-1, optional>);
+## Modulation
+### env
+ADSR envelope generator
+Parameters:
+ 1. Input signal
+ 2. Attack
+ 3. Decay
+ 4. Sustain
+ 5. Release
 
-square(200, 0.5);
-```
-### phasor
-A phasor, rising from 0 to 1.
-```
-phasor(<frequenzy in Hz>, <initial phase 0-1, optional>);
+## Mapping
+### blin
+Map input into a linear range, assuming bipolar source (between -1 and 1)
+Parameters:
+ 1. Input signal
+ 2. Lower bound of destination range
+ 3. Upper bound of destination range
+### bexp
+Map input into an exponential range, assuming bipolar source (between -1 and 1)
+Parameters:
+ 1. Input signal
+ 2. Lower bound of destination range
+ 3. Upper bound of destination range
+### ulin
+Map input into a linear range, assuming unipolar source (between 0 and 1)
+Parameters:
+ 1. Input signal
+ 2. Lower bound of destination range
+ 3. Upper bound of destination range
+### uexp
+Map input into an exponential range, assuming unipolar source (between 0 and 1)
+Parameters:
+ 1. Input signal
+ 2. Lower bound of destination range
+ 3. Upper bound of destination range
+### linlin
+Map input into a linear range, specifying the range of the source
+Parameters:
+ 1. Input signal
+ 2. Lower bound of source range
+ 3. Upper bound of source range
+ 4. Lower bound of destination range
+ 5. Upper bound of destination range
+### linexp
+Map input into an exponential range, specifying the range of the source
+Parameters:
+ 1. Input signal
+ 2. Lower bound of source range
+ 3. Upper bound of source range
+ 4. Lower bound of destination range
+ 5. Upper bound of destination range
 
-phasor(200, 0.5);
-```
-### phasor2
-A phasor with configurable start and end levels.
-```
-phasor(<frequenzy in Hz>, <start>, <end>, <initial phase 0-1, optional>);
-
-phasor(200, -1, 1, 0.5);
-```
-### pulse
-A pulse oscillator with modulatable phase width.
-```
-pulse(<frequenzy in Hz>, <pulse width 0-1>, <initial phase 0-1, optional>);
-
-pulse(200, 0.1, 0.5);
-```
-### impulse
-An impulse generator, useful for triggering one-shot samples.
-```
-impulse(<frequenzy in Hz>, <initial phase 0-1, optional>);
-
-impulse(4, 0.5);
-
-sample(\kick, impulse(2));
-```
-### noise
-An white noise generator. Set the amplitude with an optional argument.
-```
-noise(<amplitude - optional>);
-
-noise(0.8);
-```
-
-## Musical Generators
-
-### click
-An impulse generator, with bpm as argument, a division and offset parameter.
-```
-click(<beats per minute>, <bar division>, <offset in bar 0-1, optional>);
-
-click(110, 4);
-
-sample(\kick, click(110, 4));
-```
-### count
-A counter signal for 1 bar, set the speed in bpm, start count and end count.
-```
-count(<beats per minute>, <start>, <end>);
-
-count(110, 0, 16);
-
-#bpm is constant(100);
-sine(mul(count(#bpm, 2, 12), 100));
-```
----
-## Synthesis
-### oscbank
-A bank of sinewave oscillators. Phases of oscillators are positioned at random. Amplitude of total is divided by amount of oscillators to normalize amplitude.
-```
-oscbank(<freq_1>, <freq_2>, ..., <freq_n>);
-
-oscbank(200, 300, 400, 500, 600);
-```
-
-### sawbank
-A bank of saw-wave oscillators. Phases of oscillators are positioned at random. Amplitude of total is divided by amount of oscillators to normalize amplitude.
-```
-sawbank(<freq_1>, <freq_2>, ..., <freq_n>);
-
-sawbank(200, 300, 400, 500, 600);
-```
-
-### squarebank
-A bank of square-wave oscillators. Phases of oscillators are positioned at random. Amplitude of total is divided by amount of oscillators to normalize amplitude.
-```
-squarebank(<freq_1>, <freq_2>, ..., <freq_n>);
-
-squarebank(200, 300, 400, 500, 600);
-```
-
-### trianglebank
-A bank of triangle-wave oscillators. Phases of oscillators are positioned at random. Amplitude of total is divided by amount of oscillators to normalize amplitude. 
-```
-squarebank(<freq_1>, <freq_2>, ..., <freq_n>);
-
-squarebank(200, 300, 400, 500, 600);
-```
-
-### amsynth
-A simple Amplitude Modulation (bipolar, Ringmodulation) of 2 sinewave oscillators. Provide frequency for carrier and modulator oscillator.
-```
-amsynth(<carrier frequency in Hz>, <modulation frequency in Hz>);
-
-amsynth(300, 400);
-```
-
-### fmsynth
-A simple Frequency Modulation of a sinewave oscillators. Provide frequency for the carrier modulator, Harmonicity Ratio for modulation frequency and Modulation Index for depth.
-```
-fmsynth(<carrier frequency in Hz>, <harmonicity ratio>, <modulation index>);
-
-fmsynth(200, 2, 5);
-```
----
-## Sampling
-### sample
-Creates a sampler to play a file from disk. The sample plays when the signal trigger has a positive zero crossing.
-```
-sample(<filename>, <trigger>);
-
-sample(\kick, impulse(4));
-```
-
-### loop
-Creates a sampler to play a file from disk. The file plays in a continuous loop. Provide playback speed.
-```
-loop(<filename>, <playback speed>);
-
-loop(\amenbreak, 0.8);
-```
----
-## Variables
-A variable name can be made with the `#` and the `is` function.
-
-### constant
-Store a constant in a variable
-```
-constant(<value>);
-
-#bpm is constant(115);
-sample(\kick, click(#bpm, 4));
-```
-### signal
-Store the result of a signal processing chain for later usage.
-```
-#sines is oscbank(200, 300, 400, 500, 600);
-
-distort(#sines, 10);
-```
----
 ## Effects
-### distort
-A simple tanh distortion algorithm.
-```
-distort(<signal>, <distortion level 0 upwards>)
-
-distort(sine(400), 200);
-```
-### delay
-A delay effect with feedback added to the original signal
-```
-delay(<signal>, <delay time in ms>, <feedback 0-1>, <wet, optional, default=0.4>);
-```
-
-<!-- ### flanger
+### dist
+Tanh distortion
+ 1. Input signal
+ 2. Distortion level (0 upwards)
+### dl
+Delay
+ 1. Input signal
+ 2. Delay time (in samples)
+ 3. Feedback
+### flange
 Flanger
  1. Input signal
  2. Delay (ms)
@@ -248,211 +261,57 @@ Flanger
  2. Delay (ms)
  3. Feedback (0-1)
  4. Speed (Hz)
- 5. Depth (0-1) -->
----
-## Filters
-### lopass
-One pole lowpass filter
-```
-lopass(<signal>, <cutoff 0-1>);
-```
-### hipass
-One pole highpass filter
-```
-hipass(<signal>, <cutoff 0-1>);
-```
-### lores
-Resonant lowpass filter
-```
-lores(<signal>, <cutoff in Hz>, <resonance 0 upwards>);
-```
-### hires
-Resonant lowpass filter
-```
-hires(<signal>, <cutoff in Hz>, <resonance 0 upwards>);
-```
+ 5. Depth (0-1)
 
-## Communication with JS
-### toJS
-Creates a transducer for sending a signal to a javascript model
-```
-toJS(<polling frequency>, <index identifier>, <optional extra argument>);
-```
-### fromJS
-Creates a transducer for receiving a signal from a javascript model
-```
-toJS(<polling frequency>, <index identifier>);
-```
----
-## Math Operations
+## Filters
+### lpf
+One pole lowpass filter
+ 1. Input signal
+ 2. Filter amount (0-1)
+### hpf
+One pole highpass filter
+ 1. Input signal
+ 2. Filter amount (0-1)
+### lpz
+Resonant lowpass filter
+ 1. Input signal
+ 2. Filter frequency (Hz)
+ 3. Resonance
+### hpz
+Resonant lowpass filter
+ 1. Input signal
+ 2. Filter frequency (Hz)
+ 3. Resonance
+
+## Sampling
+### sampler
+Creates a sampler with a signal input, the sample plays when the input has a positive zero crossing
+ 1. Input signal
+ 2. Sample name
+### loop
+Creates a sampler that plays in a continuous loop
+ 1. Speed
+ 2. Sample name
 ### sah
 Sample and hold
-```
-sah(<signal>, <resample and hold time in ms>);
-```
+1. Input signal
+2. Hold time (ms)
 
-### gt
-Outputs 1 if $A > B$, otherwise 0
-```
-gt(<value/signal>, <value/signal>);
-```
-### lt
-Outputs 1 if $A < B$, otherwise 0
-```
-lt(<value/signal>, <value/signal>);
-```
-### mod
-return A modulo B
-```
-lt(<value/signal>, <value/signal>);
-```
-### add
-$A + B$
-```
-add(<value/signal>, <value/signal>);
-```
-### sub
-$A - B$
-```
-sub(<value/signal>, <value/signal>);
-```
-### mul
-$A * B$
-```
-mul(<value/signal>, <value/signal>);
-```
-### div
-$A / B$
-```
-div(<value/signal>, <value/signal>);
-```
-### pow
-$A ^ B$
-```
-pow(<value/signal>, <value/signal>);
-```
-### abs
-The absolute value of A
-```
-abs(<value/signal>);
-```
-### sum
-Sums all parameters
-```
-sum(<x_1>, <x_2>, ..., <x_n>);
-```
-### prod
-Product of all parameters
-```
-prod(<x_1>, <x_2>, ..., <x_n>);
-```
-### mix
-Root Mean Square (RMS) of all parameters for an equal power mix of non-correlated sounds
-```
-mix(<x_1>, <x_2>, ..., <x_n>);
-```
-
-## Modulation
-### env
-ADSR envelope generator
-Parameters:
- 1. Input signal
- 2. Attack
- 3. Decay
- 4. Sustain
- 5. Release
----
-## Mapping
-### map
-The most used mapping function, therefore easily accessible. Map input into an exponential range, assuming bipolar source (between -1 and 1).
-```
-map(<signal/value>, <low bound>, <high bound>);
-
-map(sine(0.5), 100, 1000);
-``` 
-### mapu
-Map input into an exponential range, assuming unipolar source (between 0 and 1).
-```
-mapu(<signal/value>, <low bound>, <high bound>);
-
-mapu(phasor(0.5), 100, 1000);
-``` 
-### maplinb
-Map input into a linear range, assuming bipolar source (between -1 and 1).
-```
-maplinb(<signal/value>, <low bound>, <high bound>);
-
-maplinb(sine(0.5), 100, 1000);
-``` 
-### maplinu
-Map input into a linear range, assuming unipolar source (between 0 and 1).
-```
-maplinu(<signal/value>, <low bound>, <high bound>);
-
-maplinu(phasor(0.5), 100, 1000);
-``` 
-### maplin
-Map input into a linear range, specifying the range of the source.
-```
-maplin(<signal/value>, <low input>, <high input>, <low bound>, <high bound>);
-
-maplin(sine(0.5), 100, 1000);
-``` 
-### scale
-Map input into an exponential range, specifying the range of the source
-```
-scale(<signal/value>, <low input>, <high input>, <low bound>, <high bound>);
-
-map(sine(0.5), 100, 1000);
-``` 
---- 
 ## Networking
+
 ### oscin
-Receive an open sound control signal
+Receive and open sound control signal
  1. OSC address
  2. Index of the OSC data element to observe (-1 means all elements)
 
----
-## Lexer and Parsing
 
-When designing your own grammer you can use these functions to generate the parsing tree.
-
-### @lang
-This is the top level node of the tree, and contains an array of branches
-```
-{ "@lang" : [branches]}
-  ```
-### @sigOut  
-Output a signal from the signal engine
-```
-{"@sigOut": <branch>}
-```
-### @spawn
-Execute a branch of a tree
-```
-{ "@spawn":<branch>}
-```
-### @num
-```
-{"@num":{value:val}}
-```
-### @str
-```
-{"@string":val}
-```
-### @setvar
-Set a variable, with the output from a branch of the tree.
-```
-{"@setvar": {"@varname":<string>,"@varvalue":<branch>}};
-```
-### @getvar
-Get a variable
-```
-{"@getvar":<string>}
-```
-### @sigp
-@sigp represents a signal processor or signal generation.  It looks like this:
-```
-{"@sigp": {"@params":[params], "@func":<string>}}
-```
-It needs a function name, and an array of parameters.   You can use any of the options below:
+## Machine Learning
+### toJS
+Creates a transducer for sending a signal to a javascript model
+ 1. Polling frequency
+ 2. Data 1
+ 3. Data 2
+### fromJS
+Creates a transducer for receiving a signal from a javascript model
+ 1. Polling frequency
+ 2. Data
