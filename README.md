@@ -40,13 +40,17 @@ mul(sum(#kc, #sn, #ht), 0.5);
 
 ## Documentation
 
-[MAIA API documentation](doc/maia_API_doc.md)
+For a complete list of functions see the documentation below.
+
+[Maia API documentation](doc/maia_API_doc.md)
 
 [Sema Intermediate Language](doc/semaIR.md)
 
 [Data storage and loading](doc/Model_loading_storing.md)
 
-[Maximilian DSP Library API](doc/maxi_API_doc.md)
+[Maximilian DSP library API](doc/maxi_API_doc.md)
+
+[Sema Default Grammar](doc/LiveCodingAPI_defaultGrammar.md) - *Not used, overwritten by the Maia grammar*
 
 ## Dependencies
 
