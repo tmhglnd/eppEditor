@@ -37,6 +37,7 @@ var grammar = {
     {"name": "Expression", "symbols": [(lexer.has("oscAddress") ? {type: "oscAddress"} : oscAddress), "_", "ParameterList"], "postprocess": d=> semaIR.synth("oscin", [semaIR.str(d[0].value),d[0]["@params"][2]])},
     {"name": "Expression", "symbols": [(lexer.has("variable") ? {type: "variable"} : variable), "_", (lexer.has("apply") ? {type: "apply"} : apply), "_", "Expression"], "postprocess": d => semaIR.setvar(d[0],d[4])},
     {"name": "ParameterList", "symbols": [(lexer.has("paramBegin") ? {type: "paramBegin"} : paramBegin), "Params", (lexer.has("paramEnd") ? {type: "paramEnd"} : paramEnd)], "postprocess": d => ({"paramBegin":d[0], "@params":d[1], "paramEnd":d[2]} )},
+    {"name": "ParameterList", "symbols": [(lexer.has("paramBegin") ? {type: "paramBegin"} : paramBegin), (lexer.has("paramEnd") ? {type: "paramEnd"} : paramEnd)], "postprocess": d => ({"paramBegin":d[0], "@params": "", "paramEnd":d[1]} )},
     {"name": "Params", "symbols": ["ParamElement"], "postprocess": (d) => ([d[0]])},
     {"name": "Params", "symbols": ["ParamElement", "_", (lexer.has("separator") ? {type: "separator"} : separator), "_", "Params", "_"], "postprocess": d => [d[0]].concat(d[4])},
     {"name": "ParamElement", "symbols": [(lexer.has("number") ? {type: "number"} : number)], "postprocess": (d) => ({"@num":d[0]})},

@@ -73,20 +73,42 @@ const jsFuncMap = {
   // 'select': {
   //   "setup":(o,p) => `${o} = new Module.maxiOsc();`, 
   //   "loop":(o,p) => {let s= `(`; for(let i=1; i < p.length-1; i++){ if(p[0].loop == i) { s=`${p[i].loop}`; return s;+")";}},
+  'sine': {
+    "setup":(o,p)=>`${o} = new Module.maxiOsc(); 
+      ${o}.phaseReset(${p.length>2 ? p[2].loop : 0.0});`, 
+    "loop":(o,p)=>`${o}.sinewave(${p[0].loop})*(${p.length>1 ? p[1].loop : 1.0})`},
 
-  'saw': {"setup":(o,p)=>`${o} = new Module.maxiOsc(); ${o}.phaseReset(${p.length>1 ? p[1].loop : 0.0});`, "loop":(o,p)=>`${o}.saw(${p[0].loop})`},
-  'sine': {"setup":(o,p)=>`${o} = new Module.maxiOsc(); ${o}.phaseReset(${p.length>1 ? p[1].loop : 0.0});`, "loop":(o,p)=>`${o}.sinewave(${p[0].loop})`},
-  'triangle': {"setup":(o,p)=>`${o} = new Module.maxiOsc(); ${o}.phaseReset(${p.length>1 ? p[1].loop : 0.0});`, "loop":(o,p)=>`${o}.triangle(${p[0].loop})`},
+  'saw': {
+    "setup":(o,p)=>`${o} = new Module.maxiOsc(); 
+      ${o}.phaseReset(${p.length>2 ? p[2].loop : 0.0});`, 
+    "loop":(o,p)=>`${o}.saw(${p[0].loop})*(${p.length>1 ? p[1].loop : 1.0})`},
+
+  'sawn': {
+    "setup":(o,p)=>`${o} = new Module.maxiOsc(); 
+      ${o}.phaseReset(${p.length>2 ? p[2].loop : 0.0});`, 
+    "loop":(o,p)=>`${o}.sawn(${p[0].loop})*(${p.length>1 ? p[1].loop : 1.0})`},
+  
+  'triangle': {
+    "setup":(o,p)=>`${o} = new Module.maxiOsc(); 
+      ${o}.phaseReset(${p.length>2 ? p[2].loop : 0.0});`, 
+    "loop":(o,p)=>`${o}.triangle(${p[0].loop})*(${p.length>1 ? p[1].loop : 1.0})`},
+
+  'square': {
+    "setup":(o,p)=>`${o} = new Module.maxiOsc(); 
+      ${o}.phaseReset(${p.length>2 ? p[2].loop : 0.0});`, 
+    "loop":(o,p)=>`${o}.square(${p[0].loop})*(${p.length>1 ? p[1].loop : 1.0})`},
+
   'phasor': {"setup":(o,p)=>`${o} = new Module.maxiOsc(); ${o}.phaseReset(${p.length>1 ? p[1].loop : 0.0});`, "loop":(o,p)=>`${o}.phasor(${p[0].loop})`},
   'ph2': {"setup":(o,p)=>`${o} = new Module.maxiOsc(); ${o}.phaseReset(${p.length>3 ? p[3].loop : 0.0});`, "loop":(o,p)=>`${o}.phasor(${p[0].loop},${p[1].loop},${p[2].loop})`},
-  'square': {"setup":(o,p)=>`${o} = new Module.maxiOsc(); ${o}.phaseReset(${p.length>1 ? p[1].loop : 0.0});`, "loop":(o,p)=>`${o}.square(${p[0].loop})`},
   'pulse': {"setup":(o,p)=>`${o} = new Module.maxiOsc(); ${o}.phaseReset(${p.length>2 ? p[2].loop : 0.0});`, "loop":(o,p)=>`${o}.pulse(${p[0].loop},${p[1].loop})`},
   'impulse': {"setup":(o,p)=>`${o} = new Module.maxiOsc(); ${o}.phaseReset(${p.length>1 ? p[1].loop : 0.0});`, "loop":(o,p)=>`${o}.impulse(${p[0].loop})`},
-  'sawn': {"setup":(o,p)=>`${o} = new Module.maxiOsc(); ${o}.phaseReset(${p.length>1 ? p[1].loop : 0.0});`, "loop":(o,p)=>`${o}.sawn(${p[0].loop})`},
-  'noise': {"setup":(o,p)=>`${o} = new Module.maxiOsc()`, "loop":(o,p)=>`${o}.noise()*${p[0].loop}`},
+
+  'noise': {
+    "setup":(o,p)=>`${o} = new Module.maxiOsc()`, 
+    "loop":(o,p)=>`${o}.noise()*(${p.length>0 ? p[0].loop : 1.0})`},
 
   'toFreq' : {"setup":(o,p)=>"", "loop":(o,p)=>`Math.pow(2, Math.floor(${p[0].loop}-69)/12) * 440`},
-  'constant': {"setup":(o,p)=>"", "loop":(o,p)=>`${p[0].loop}`},
+  'constant': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop})`},
   
   'gt': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} > ${p[1].loop}) ? 1 : 0`},
   'lt': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} < ${p[1].loop}) ? 1 : 0`},

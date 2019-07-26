@@ -1,7 +1,7 @@
 
 # **MAIA - Audio Livecoding Language in the Browser**
 
-*This language is forked from the [SEMA project](https://github.com/mimic-sussex/eppEditor). SEMA is a Livecoding Language Design Platform created by the amazing team from the [MIMIC Project](https://mimicproject.com/about). Sema is a playground where you can rapid prototype mini-languages for live coding that integrate signal synthesis, machine learning and machine listening.*
+*This language is forked from the [SEMA project](https://github.com/mimic-sussex/eppEditor) and it uses the [Maximilian.js](https://github.com/micknoise/Maximilian) audio engine for webaudio in the browser. SEMA is a Livecoding Language Design Platform created by the amazing team from the [MIMIC Project](https://mimicproject.com/about). Sema is a playground where you can rapid prototype mini-languages for live coding that integrate signal synthesis, machine learning and machine listening.*
 
 MAIA has a grammar that focuses on readability and various extra functionalities in the sound engine then the original SEMA grammar. It has more abstracted functions (such as synths) and a few more 'musical' methods that generate rhythms.
 
@@ -41,31 +41,38 @@ sine(mul(sine(1), 500));
 ```
 ---
 ## Basic Oscillators
-### saw
-A saw oscillator.
-```
-saw(<frequenzy in Hz>, <initial phase 0-1, optional>);
-
-saw(200, 0.5);
-```
 ### sine
-A sinewave oscillator.
+A sinewave oscillator. Provide the frequency as first argument, set the amplitude and phase with optional second and third argument.
 ```
-sine(<frequenzy in Hz>, <initial phase 0-1, optional>);
+sine(<frequenzy in Hz>, <amplitude - optional>, <initial phase 0-1, optional>);
 
 sine(200, 0.5);
 ```
-### triangle
-A triangle wave oscillator.
+### saw
+A saw oscillator. Provide the frequency as first argument, set the amplitude and phase with optional second and third argument.
 ```
-triangle(<frequenzy in Hz>, <initial phase 0-1, optional>);
+saw(<frequenzy in Hz>, <amplitude - optional>, <initial phase 0-1, optional>);
+
+saw(200, 0.5);
+```
+### sawn
+An band limited saw wave oscillator. Provide the frequency as first argument, set the amplitude and phase with optional second and third argument.
+```
+sawn(<frequenzy in Hz>, <amplitude - optional>, <initial phase 0-1, optional>);
+
+sawn(200, 0.5);
+```
+### triangle
+A triangle wave oscillator. Provide the frequency as first argument, set the amplitude and phase with optional second and third argument.
+```
+triangle(<frequenzy in Hz>, <amplitude - optional>, <initial phase 0-1, optional>);
 
 triangle(200, 0.5);
 ```
 ### square
-A square wave oscillator.
+A square wave oscillator. Provide the frequency as first argument, set the amplitude and phase with optional second and third argument.
 ```
-square(<frequenzy in Hz>, <initial phase 0-1, optional>);
+square(<frequenzy in Hz>, <amplitude - optional>, <initial phase 0-1, optional>);
 
 square(200, 0.5);
 ```
@@ -99,17 +106,10 @@ impulse(4, 0.5);
 
 sample(\kick, impulse(2));
 ```
-### sawn
-An band limited saw wave oscillator.
-```
-sawn(<frequenzy in Hz>, <initial phase 0-1, optional>);
-
-sawn(200, 0.5);
-```
 ### noise
-An white noise generator.
+An white noise generator. Set the amplitude with an optional argument.
 ```
-noise(<amplitude>);
+noise(<amplitude - optional>);
 
 noise(0.8);
 ```

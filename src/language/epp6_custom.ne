@@ -61,6 +61,9 @@ Expression ->
 ParameterList ->
   %paramBegin Params %paramEnd
   {% d => ({"paramBegin":d[0], "@params":d[1], "paramEnd":d[2]} ) %}
+  |
+  %paramBegin %paramEnd
+  {% d => ({"paramBegin":d[0], "@params": "", "paramEnd":d[1]} ) %}
 
 Params ->
   ParamElement                                                   
