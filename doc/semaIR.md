@@ -1,7 +1,9 @@
 
 # **MAIA - Audio Livecoding Language in the Browser**
 
-*This language is forked from the [SEMA project](https://github.com/mimic-sussex/eppEditor). It has a different grammar and various extra functionalities in the sound engine. SEMa is a Livecoding Language Design Platform. Sema is a playground where you can rapid prototype mini-languages for live coding that integrate signal synthesis, machine learning and machine listening.*
+*This language is forked from the [SEMA project](https://github.com/mimic-sussex/eppEditor). SEMA is a Livecoding Language Design Platform created by the amazing team from the [MIMIC Project](https://mimicproject.com/about). Sema is a playground where you can rapid prototype mini-languages for live coding that integrate signal synthesis, machine learning and machine listening.*
+
+MAIA has a grammar that focuses on readability and various extra functionalities in the sound engine then the original SEMA grammar. It has more abstracted functions (such as synths) and a few more 'musical' methods that generate rhythms.
 
 ## Content
 
@@ -37,8 +39,7 @@ Functions can be nested to modulate other parameters.
 ```
 sine(mul(sine(1), 500));
 ```
-
-
+---
 ## Basic Oscillators
 ### saw
 A saw oscillator.
@@ -134,7 +135,7 @@ count(110, 0, 16);
 #bpm is constant(100);
 sine(mul(count(#bpm, 2, 12), 100));
 ```
-
+---
 ## Synthesis
 ### oscbank
 A bank of sinewave oscillators. Phases of oscillators are positioned at random. Amplitude of total is divided by amount of oscillators to normalize amplitude.
@@ -183,7 +184,7 @@ fmsynth(<carrier frequency in Hz>, <harmonicity ratio>, <modulation index>);
 
 fmsynth(200, 2, 5);
 ```
-
+---
 ## Sampling
 ### sample
 Creates a sampler to play a file from disk. The sample plays when the signal trigger has a positive zero crossing.
@@ -200,7 +201,7 @@ loop(<filename>, <playback speed>);
 
 loop(\amenbreak, 0.8);
 ```
-
+---
 ## Variables
 A variable name can be made with the `#` and the `is` function.
 
@@ -219,7 +220,7 @@ Store the result of a signal processing chain for later usage.
 
 distort(#sines, 10);
 ```
-
+---
 ## Effects
 ### distort
 A simple tanh distortion algorithm.
@@ -248,7 +249,7 @@ Flanger
  3. Feedback (0-1)
  4. Speed (Hz)
  5. Depth (0-1) -->
-
+---
 ## Filters
 ### lopass
 One pole lowpass filter
@@ -282,7 +283,7 @@ Creates a transducer for receiving a signal from a javascript model
 ```
 toJS(<polling frequency>, <index identifier>);
 ```
-
+---
 ## Math Operations
 ### sah
 Sample and hold
@@ -360,7 +361,7 @@ Parameters:
  3. Decay
  4. Sustain
  5. Release
-
+---
 ## Mapping
 ### map
 The most used mapping function, therefore easily accessible. Map input into an exponential range, assuming bipolar source (between -1 and 1).
@@ -404,13 +405,14 @@ scale(<signal/value>, <low input>, <high input>, <low bound>, <high bound>);
 
 map(sine(0.5), 100, 1000);
 ``` 
- 
+--- 
 ## Networking
 ### oscin
 Receive an open sound control signal
  1. OSC address
  2. Index of the OSC data element to observe (-1 means all elements)
 
+---
 ## Lexer and Parsing
 
 When designing your own grammer you can use these functions to generate the parsing tree.
