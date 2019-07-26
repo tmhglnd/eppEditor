@@ -14,17 +14,17 @@ const oscMap = {
 const jsFuncMap = {
   'amsynth': {
     "setup":(o,p) => `${o} = new Module.maxiOsc();
-        ${o}mod = new Module.maxiOsc();
-        ${o}.phaseReset(${p.length>2 ? p[2].loop : 0.0});
-        ${o}mod.phaseReset(${p.length>2 ? p[2].loop : 0.0});`,
+      ${o}mod = new Module.maxiOsc();
+      ${o}.phaseReset(${p.length>2 ? p[2].loop : 0.0});
+      ${o}mod.phaseReset(${p.length>2 ? p[2].loop : 0.0});`,
     "loop":(o,p) => `${o}.sinewave(${p[0].loop})*${o}mod.sinewave(${p[1].loop})`},
 
   'rmsynth': {
-      "setup":(o,p) => `${o} = new Module.maxiOsc();
-          ${o}mod = new Module.maxiOsc();
-          ${o}.phaseReset(${p.length>2 ? p[2].loop : 0.0});
-          ${o}mod.phaseReset(${p.length>2 ? p[2].loop : 0.0});`,
-      "loop":(o,p) => `${o}.sinewave(${p[0].loop})*${o}mod.sinewave(${p[0].loop}*${p[1].loop})`},
+    "setup":(o,p) => `${o} = new Module.maxiOsc();
+      ${o}mod = new Module.maxiOsc();
+      ${o}.phaseReset(${p.length>2 ? p[2].loop : 0.0});
+      ${o}mod.phaseReset(${p.length>2 ? p[2].loop : 0.0});`,
+    "loop":(o,p) => `${o}.sinewave(${p[0].loop})*${o}mod.sinewave(${p[0].loop}*${p[1].loop})`},
 
   'fmsynth': {
     "setup":(o,p) => `${o} = new Module.maxiOsc();
@@ -34,18 +34,32 @@ const jsFuncMap = {
     "loop":(o,p) => `${o}.sinewave(${p[0].loop} + ${o}mod.sinewave(${p[0].loop} * ${p[1].loop}) * (${p[2].loop} * ${p[0].loop} * ${p[1].loop}))`},
 
   'oscbank': {
-    "setup":(o,p) => 
-    `${o} = [];
+    "setup":(o,p) => `${o} = [];
     for (let i=0; i<${p.length}; i++){
-      ${o}[i] = new Module.maxiOsc(); }`,
+      ${o}[i] = new Module.maxiOsc();
+      ${o}[i].phaseReset(Math.random()); }`,
     "loop":(o,p) => {let s=`(${o}[0].sinewave(${p[0].loop})`; for(let i=1; i < p.length; i++) s += `+${o}[${i}].sinewave(${p[i].loop})`; return s+")/"+`${p.length}`;}},
 
   'sawbank': {
-    "setup":(o,p) => 
-    `${o} = [];
+    "setup":(o,p) => `${o} = [];
     for (let i=0; i<${p.length}; i++){
-      ${o}[i] = new Module.maxiOsc(); }`,
+      ${o}[i] = new Module.maxiOsc();
+      ${o}[i].phaseReset(Math.random()); }`,
     "loop":(o,p) => {let s=`(${o}[0].saw(${p[0].loop})`; for(let i=1; i < p.length; i++) s += `+${o}[${i}].saw(${p[i].loop})`; return s+")/"+`${p.length}`;}},
+
+  'squarebank': {
+    "setup":(o,p) => `${o} = [];
+    for (let i=0; i<${p.length}; i++){
+      ${o}[i] = new Module.maxiOsc();
+      ${o}[i].phaseReset(Math.random()); }`,
+    "loop":(o,p) => {let s=`(${o}[0].square(${p[0].loop})`; for(let i=1; i < p.length; i++) s += `+${o}[${i}].square(${p[i].loop})`; return s+")/"+`${p.length}`;}},
+
+  'trianglebank': {
+    "setup":(o,p) => `${o} = [];
+    for (let i=0; i<${p.length}; i++){
+      ${o}[i] = new Module.maxiOsc();
+      ${o}[i].phaseReset(Math.random()); }`,
+    "loop":(o,p) => {let s=`(${o}[0].triangle(${p[0].loop})`; for(let i=1; i < p.length; i++) s += `+${o}[${i}].triangle(${p[i].loop})`; return s+")/"+`${p.length}`;}},
 
   'click': {
     "setup":(o,p)=>`${o} = new Module.maxiOsc(); ${o}.phaseReset(${p.length>2 ? p[2].loop : 0.0});`, 

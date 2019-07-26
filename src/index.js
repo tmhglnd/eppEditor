@@ -157,6 +157,7 @@ function createEditor1() {
     value: defaultEditorCode1,
     showCursorWhenSelecting: true,
     //theme: "monokai",
+    mode: "none",
     theme: mainTheme,
     lineNumbers: true,
     lineWrapping: true,
