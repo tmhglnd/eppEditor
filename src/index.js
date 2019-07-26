@@ -347,14 +347,15 @@ function evalExpression(expression) {
 
 function getBlock(editor) {
   //find code between dividers
-  const divider = "__________";
+  // const divider = "__________";
   let cursorInfo = editor.getCursor();
   //find post divider
   let line = cursorInfo.line;
   let linePost = editor.lastLine();
   while (line < linePost) {
     // console.log(editor2.getLine(line));
-    if (editor.getLine(line) == divider) {
+    if (/___+/.test(editor.getLine(line))) {
+      // at least 3 underscores needed
       linePost = line - 1;
       break;
     }
@@ -364,7 +365,7 @@ function getBlock(editor) {
   let linePre = -1;
   while (line >= 0) {
     // console.log(editor2.getLine(line));
-    if (editor.getLine(line) == divider) {
+    if (/___+/.test(editor.getLine(line))) {
       linePre = line;
       break;
     }
