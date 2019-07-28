@@ -9,7 +9,12 @@ const lexer = moo.compile({
   separator:    /,/,
   paramEnd:     /\)/,
   paramBegin:   /\(/,
-  variable:     /\#[a-zA-Z0-9]+/,
+  arrayBegin:   /\[/,
+  arrayEnd:     /\]/,
+  varStart:     /let/,
+  varApply:     /be/,
+  //apply:        /is/,
+  //variable:     /\#[a-zA-Z0-9]+/,
   string:       { match: /\\[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},
   //string:       /\"[a-zA-Z0-9]+"/,
   //sample:       { match: /\\[a-zA-Z0-9]+/, lineBreaks: true, value: x => x.slice(1, x.length)},
@@ -17,8 +22,9 @@ const lexer = moo.compile({
   oscAddress:   /(?:\/[a-zA-Z0-9]+)+/,
   number:       /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?(?:[eE][-+]?[0-9]+)?\b/,
   semicolon:    /;/,
-  apply:        /is/,
-  funcName:     /[a-zA-Z][a-zA-Z0-9]*/,
+  //funcName:     /[a-zA-Z][a-zA-Z0-9]*/,
+  funcName:     { match: /[a-zA-Z][a-zA-Z0-9]*\(/, lineBreaks: false, value: x => x.slice(0, x.length-1)},
+  variable:     /[a-zA-Z][a-zA-Z0-9]*/,
   ws:           {match: /\s+/, lineBreaks: true},
 });
 
@@ -54,16 +60,26 @@ Expression ->
   |
   %oscAddress _ ParameterList 
   {% d=> semaIR.synth("oscin", [semaIR.str(d[0].value),d[0]["@params"][2]])%}
+  # |
+  # %variable _ %apply _ Expression 
+  # {% d => semaIR.setvar(d[0],d[4]) %}
   |
-  %variable _ %apply _ Expression 
-  {% d => semaIR.setvar(d[0],d[4]) %}
+  %varStart _ %variable _ %varApply _ Expression 
+  {% d => semaIR.setvar(d[2],d[6]) %}
 
 ParameterList ->
-  %paramBegin Params %paramEnd
-  {% d => ({"paramBegin":d[0], "@params":d[1], "paramEnd":d[2]} ) %}
+  # THE OLD GRAMMAR ALWAYS CHECKED FOR PARAMETER BEGIN
+  # %paramBegin Params %paramEnd
+  # {% d => ({"paramBegin":d[0], "@params":d[1], "paramEnd":d[2]} ) %}
+  # |
+  # %paramBegin %paramEnd
+  # {% d => ({"paramBegin":d[0], "@params": "", "paramEnd":d[1]} ) %}
+  Params %paramEnd
+  {% d => ({"paramBegin":"(", "@params":d[0], "paramEnd":d[1]} ) %}
   |
-  %paramBegin %paramEnd
-  {% d => ({"paramBegin":d[0], "@params": "", "paramEnd":d[1]} ) %}
+  %paramEnd
+  {% d => ({"paramBegin":"(", "@params": "", "paramEnd":d[1]} ) %}
+
 
 Params ->
   ParamElement                                                   

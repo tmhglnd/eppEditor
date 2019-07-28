@@ -16,6 +16,7 @@ MAIA is a livecoding mini-language with a grammar that focuses on readability an
 - Effects
 - Communication with JS
 - Math Operations
+- Constants
 - Modulation
 - Mapping
 - Networking
@@ -82,6 +83,13 @@ A phasor, rising from 0 to 1.
 phasor(<frequenzy in Hz>, <initial phase 0-1, optional>);
 
 phasor(200, 0.5);
+```
+### phasir
+A inverted phasor, falling from 1 to 0.
+```
+phasir(<frequenzy in Hz>, <initial phase 0-1, optional>);
+
+phasir(200, 0.5);
 ```
 ### phasor2
 A phasor with configurable start and end levels.
@@ -296,7 +304,6 @@ Sample and hold
 ```
 sah(<signal>, <resample and hold time in ms>);
 ```
-
 ### gt
 Outputs 1 if $A > B$, otherwise 0
 ```
@@ -356,6 +363,20 @@ prod(<x_1>, <x_2>, ..., <x_n>);
 Root Mean Square (RMS) of all parameters for an equal power mix of non-correlated sounds
 ```
 mix(<x_1>, <x_2>, ..., <x_n>);
+```
+
+## Constants
+The constants can be used in functions. All constants start with `_` followed by the constant name.
+```
+Pi                   : _pi | _π                   = 3.14159265359
+Two Pi               : _twopi | _2π | _2pi | _tau = 6.28318530718
+Euleurs number       : _e                         = 2.71828182846
+Golden Ratio         : _phi | _gold               = 1.61803398875
+Pythagoras' constant : _pyt | _sqrt2 | _s2        = 1.41421356237
+``` 
+A sinewave oscillator can therefor also be programmed by running a phasor multiplied by two pi radians trough a sin operator. The frequency of the phasor will determine the frequency of the sinewave.
+```
+sin(mul(phasor(220), _twopi));
 ```
 
 ## Modulation
