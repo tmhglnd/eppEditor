@@ -5,7 +5,11 @@
 
 MAIA is a livecoding mini-language with a grammar that focuses on readability and various extra functionalities in the sound engine other than the default SEMA grammar. It has more abstracted functions (such as synths) and a few more 'musical' methods that generate rhythms. MAIA is the result my work during the MIMIC Artists Summer Workshop at Sussex University.
 
-## Changes and Additions to the SEMA language
+- [Changes and Additions to the SEMA Language](#Overview)
+- [Documentation](#Documentation)
+- [Install Instructions](#Install)
+
+## Overview
 
 ### The grammer
 - Start variables with `#`, store to variable with `is`
@@ -16,6 +20,7 @@ MAIA is a livecoding mini-language with a grammar that focuses on readability an
 #sound is sine(#freq);
 mul(#sound, 0.5);
 ```
+
 ### Quick synthesis
 - Use `amsynth`, `fmsynth`, `oscbank`, `sawbank`, `squarebank`, `trianglebank` for fast access to audio synthesis functions
 ```
@@ -52,21 +57,39 @@ For a complete list of functions see the documentation below.
 
 [Sema Default Grammar](doc/LiveCodingAPI_defaultGrammar.md) - *Not used, overwritten by the Maia grammar*
 
-## Dependencies
-
-Sema requires the following dependencies to be installed:
-
- - [Chrome browser](https://www.google.com/chrome/) 
- - Node.js version 8.9 or higher
- - [NPM cli](https://docs.npmjs.com/cli/npm) OR [Yarn](https://yarnpkg.com/en/)
- 
 ## Install
 
-How to build and run the Sema playground on your machine 
+### Dependencies
+The following dependencies are required to be installed:
 
-```sh
-cd sema
-yarn
-yarn build
-yarn dev
+ - [Chrome browser](https://www.google.com/chrome/) 
+ - [Node.js version 8.9 or higher](https://nodejs.org/en/)
+ - [Yarn](https://yarnpkg.com/en/docs/install#mac-stable)
+
+Check for version/installed by running the following commands
+```
+$ node -v
+-> v10.16.0
+
+$ yarn -v
+-> 1.17.3
+```
+
+### Clone
+Clone or Fork the git repository via the commandline or download the zip
+```
+$ git clone https://github.com/tmhglnd/maia.git
+```
+
+### Build
+Navigate to the repository to build and run the Maia on your machine with the following commands.
+```
+$ cd <path to maia-master> eg. ~/Downloads/maia-master
+$ yarn
+$ yarn build
+```
+
+Run with the following command. This will automatically open your default webbrowser. If this is not Google Chrome, then copy the `localhost:9001` to a browserwindow in Chrome.  
+```
+$ yarn dev
 ```
