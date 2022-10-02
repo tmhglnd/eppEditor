@@ -157,7 +157,7 @@ function createEditor1() {
     // theme: "abcdef",
     value: defaultEditorCode1,
     showCursorWhenSelecting: true,
-    //theme: "monokai",
+    // theme: "monokai",
     mode: "none",
     theme: mainTheme,
     lineNumbers: true,
@@ -175,6 +175,9 @@ function createEditor1() {
   });
   editor1.setSize('100%', '100%');
   editor1.setOption("vimMode", false);
+
+  // console.log("editor init", document.getElementById('editor1'));
+  // alert(document.getElementById('editor1').style.color); 
 }
 
 
@@ -203,7 +206,8 @@ function createEditor2() {
 }
 
 function createEditor3() {
-  let defaultEditorCode3 = "//COMMENT BOX:";
+  let defaultEditorCode3 = "# INTRODUCTION: \n\nInstagram/Twitter: \n- @tmghlnd \n- www.timohoogland.com \n\nWelcom to the MAIA livecoding mini-language! Copy paste any of the following mini-codes in the top-left editor and press CMD/CTRL + Enter to run the code and hear the sound. \n\nmul(sine(200), sine(0.3));";
+
   let editor3code = window.localStorage.getItem("editor3");
   if (editor3code)
     defaultEditorCode3 = editor3code;
@@ -211,7 +215,8 @@ function createEditor3() {
   editor3 = CodeMirror(document.getElementById('editor3'), {
     value: defaultEditorCode3,
     lineNumbers: true,
-    mode: "none",
+    // mode: "none",
+    mode: "Markdown",
     theme: mainTheme,
     lineWrapping: true,
     extraKeys: {
@@ -385,6 +390,7 @@ function getBlock(editor) {
   return code;
 }
 function evalLiveCodeEditorExpression() {
+  
   let expression =  getBlock(editor1);
 
   // let expression = editor1.getSelection();

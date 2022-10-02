@@ -139,7 +139,8 @@ body {
     /* 'header main main2 footer' */
     ;
 
-  grid-template-rows: 2% 58% 38% 2%;
+  /* grid-template-rows: 2% 53% 43% 2%; */
+  grid-template-rows: 0.5% 55% 43% 1.5%;
   grid-template-columns: 70% 30%;
   /* grid-auto-flow: row; */
   /* grid-template-rows: 100%; */
@@ -151,9 +152,9 @@ body {
   /* background-color: transparent; */
   padding: 0px;
   font-size: 20px;
-  width: 99%;
-  height: 99%;
-  position: absolute;
+  width: 98%;
+  height: 98%;
+  position: relative;
 }
 
 /* .container > div {
@@ -288,7 +289,7 @@ body {
 
 #containerUnderlay {
   position: absolute;
-  /*background-color: rgba(0, 100, 255, 1.0);*/
+  /* background-color: rgba(0, 100, 255, 1.0); */
   z-index: -1;
   width: 100%;
   height: 100%;
@@ -305,6 +306,7 @@ body {
   /* overflow: hidden; */
   /* float:left */
   margin: 15px 0 15px 20px;
+  /* margin: 5px 0 5px 5px; */
 }
 
 #buttonStartAudio {
@@ -367,6 +369,7 @@ body {
 .headerItem {
   font-family: "LatoWebBlack";
   margin: 0 20px 0 20px;
+  /* margin: 0 10px 0 10px; */
   float: left;
   color: #da14ff;
 }

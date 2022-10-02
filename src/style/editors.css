@@ -22,6 +22,10 @@
   display: none;
 }
 
+.CodeMirror-lines {
+  padding: 10px 0; /* Vertical padding around content */
+}
+
 #editor1 {
   /* float:left; */
   justify-self: stretch;
@@ -29,7 +33,7 @@
   height: 100%;
   border:1px solid black;
   margin: 0px;
-  caret-color: green;
+  /* caret-color: green; */
   /* margin: 0px 5px 5px 5px; */
   /* resize: both; */
 }
@@ -37,6 +41,7 @@
 #editor2 {
   /* float:left; */
   /* height:500px; */
+  justify-self: stretch;
   width: 100%;
   height: 100%;
   border:1px solid black;
@@ -48,6 +53,7 @@
 #editor3 {
   /* float:left; */
   /* height:500px; */
+  justify-self: stretch;
   width: 100%;
   height: 100%;
   border:1px solid black;
